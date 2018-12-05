@@ -1,0 +1,22 @@
+{
+  "name": "controller",
+  "version": "1.0.0",
+  "main": "controler.js",
+  "homepage": "https://alexvestin.github.io/controller/",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexVestin/controller.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AlexVestin/controller/issues"
+  },
+  "description": "",
+  "dependencies": {
+    "gh-pages": "^2.0.1"
+  }
+}
