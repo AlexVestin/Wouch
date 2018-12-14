@@ -2,66 +2,61 @@ import React, { Component } from 'react';
 import * as THREE from 'three'
 import Manager from './game/manager'
 import './App.css';
+import Controller from './controller.js/controller';
+import ScoreBoard from './ui/scoreboard';
 
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.width = 640;
-    this.height = 480;
+    this.width = 800;
+    this.height = 800;
 
-    this.state = {encoderLoaded: false, encoding: false, frames: 0}; 
-
-    this.manager = new Manager()
+    this.state = {players: {} };
     this.canvasMountRef = React.createRef();
   }
 
 
   componentDidMount() {
     // Threejs renderer set-up
-    this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
+    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.renderer.setClearColor('#000000');
     this.renderer.setSize(this.width, this.height);
     this.canvasMountRef.current.appendChild(this.renderer.domElement);
-    this.exampleSocket = new WebSocket("ws:3.8.115.45:8000");
-    this.rotation = 0;
-    
-    this.exampleSocket.onopen = () => {
-      this.exampleSocket.send("SERVER");
-    }
+    this.manager = new Manager(this.renderer, this.updatePlayers);
+    this.controller = new Controller(this.manager, this.updatePlayers, this.removePlayer);
+  
+    this.renderScene();
+  }
 
-    this.exampleSocket.onmessage = (e) => {
-      if(String(e.data[3]) === "*") {
-        let id = e.data.substr(0, 2);
-        let msg = e.data.substr(2);
-        this.manager.players[id].rotation = Number(msg);
-      }else if(String(e.data).includes("LEFTSTART")) {
-        let id = e.data.substr(0, 2);
-        this.manager.players[id].joystick_down = true;
-        console.log("LEFT DOWN", this.manager.players[id])
-      }else if(String(e.data).includes("LEFTEND")) {
-        let id = e.data.substr(0, 2);
-        this.manager.players[id].joystickDown = false;
-    }else if(String(e.data[0]) === ";") {
-        let msg = e.data.substr(1).split("-");
-        let id = msg[0];
-        let name = msg[1];
-        this.manager.addPlayer(id, name);
-       
-    }
-    }
+  updatePlayers = (players) => {
+    let p1 = Object.assign({}, this.state.players);
+    Object.keys(players).forEach(key => {
+      p1[key] = players[key]; 
+    })
+    this.setState({players: p1});
+  }
 
+  removePlayer = (id) => {
+ 
+    this.manager.removePlayer(id)
+    let p1 = Object.assign({}, this.state.players);
+    delete p1[id];
+    this.setState({players: p1});
   }
 
   renderScene = () => {
-      this.manager.update(this.renderer);
-      requestAnimationFrame(this.renderScene);
+    this.manager.update(this.renderer);
+    requestAnimationFrame(this.renderScene);
   }
 
   render() {
     return (
       <div className="container">
-        <div style={{marginTop: 20, display: this.state.encoding ? "none" : ""}} ref={this.canvasMountRef}></div>
+        <div className="wrapper">
+          <div style={{ display: this.state.encoding ? "none" : "" }} ref={this.canvasMountRef}></div>
+          <ScoreBoard players={this.state.players}></ScoreBoard>
+        </div>
       </div>
     );
   }
