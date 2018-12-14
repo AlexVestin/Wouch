@@ -15,7 +15,6 @@ class SimpleServer(WebSocket):
         elif "SERVER" in self.data:
             self.is_client = False
             return
-        
         # ID handshake
         if self.is_client:
             if not self.initialized:
@@ -37,5 +36,5 @@ class SimpleServer(WebSocket):
        clients.remove(self)
        print(self.address, 'closed')
 
-server = SimpleWebSocketServer('', 8000, SimpleServer)
+server = SimpleWebSocketServer('0.0.0.0', 8000, SimpleServer)
 server.serveforever()
