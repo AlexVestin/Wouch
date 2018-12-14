@@ -11,7 +11,7 @@ class SimpleServer(WebSocket):
     def send_to_servers(self, msg):
          for client in clients:
             if not client.is_client:
-                client.sendMessage(str(chr(self.id) + msg))                
+                client.sendMessage(chr(self.id) + msg)
 
     def handleMessage(self):
         if "CLIENT" in self.data:
@@ -28,8 +28,9 @@ class SimpleServer(WebSocket):
                 self.id = global_id_counter
                 self.initialized = True
                 global_id_counter += 1
+                self.send_to_servers(self.name)
             else:
-               self.send_to_servers(self.data)
+                 self.send_to_servers(self.data)
 
     def handleConnected(self):
        print(self.address, 'connected')
@@ -37,6 +38,7 @@ class SimpleServer(WebSocket):
 
     def handleClose(self):
        clients.remove(self)
+       self.send_to_servers("CLOSED")
        print(self.address, 'closed')
 
 server = SimpleWebSocketServer('0.0.0.0', 8000, SimpleServer)
