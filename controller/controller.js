@@ -29,7 +29,7 @@ send = function() {
 }
 
 window.onload = function() {
-    exampleSocket = new WebSocket("ws:127.0.0.1:8000");
+    exampleSocket = new WebSocket("ws:3.8.115.45:8000");
 
     var optionsLeft = {
         zone: document.getElementById("left_controller"),
@@ -38,11 +38,10 @@ window.onload = function() {
     }
     
     var managerLeft = nipplejs.create(optionsLeft);
-
-
     var url = new URL(window.location.href);
     var c = url.searchParams.get("nick");
 
+    console.log("??")
     exampleSocket.onopen = function() {
         console.log("????")
         send_debug("CLIENT" +get_end("CLIENT".length));

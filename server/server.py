@@ -8,6 +8,11 @@ class SimpleServer(WebSocket):
     id = -1
     is_client = False
 
+    def send_to_servers(self, msg):
+         for client in clients:
+            if not client.is_client:
+                client.sendMessage(str(chr(self.id) + msg))                
+
     def handleMessage(self):
         if "CLIENT" in self.data:
             self.is_client = True
@@ -25,9 +30,7 @@ class SimpleServer(WebSocket):
                 self.initialized = True
                 global_id_counter += 1
             else:
-                for client in clients:
-                    if not client.is_client:
-                        client.sendMessage(str(chr(self.id) + self.data))                
+               self.send_to_servers(self.data)
 
     def handleConnected(self):
        print(self.address, 'connected')
