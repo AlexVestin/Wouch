@@ -1,4 +1,4 @@
-
+import * as THREE from 'three'
 export function k_combinations(set, k) {
 	var i, j, combs, head, tailcombs;
 
@@ -44,10 +44,11 @@ export function get_vector_length(vector) {
 export function sumForces(q) {
     let avgX = 0;
     let avgY = 0;
-    for(var i = 0; i < q.forces.length; i++) {
-        avgX += q.forces[i];
-        avgY += q.forces[i];
-    }
+    q.forces.forEach(force => {
+        avgX += force[0];
+        avgY += force[1];
+    })
+
     return [avgX/q.mass, avgY/q.mass];
 }
 
@@ -62,7 +63,30 @@ export function sumForces(q) {
  }
 
  export function intersects(q1, q2) {
+    let obj1 = q1.mesh;
+    let obj2 = q2.mesh;
+    let firstBB = new THREE.Box3().setFromObject(obj1);
+    let secondBB = new THREE.Box3().setFromObject(obj2);
+    return firstBB.intersectsBox(secondBB);
+    /*
+    for (var vertexIndex = 0; vertexIndex < obj1.geometry.vertices.length; vertexIndex++){       
+      
+        
+        var localVertex = obj1.geometry.vertices[vertexIndex].clone();
+        var globalVertex = obj1.matrix.multiplyVector3(localVertex);
+        var directionVector = globalVertex.sub( obj1.position );
+    
+        var ray = new THREE.Raycaster( obj1.position, directionVector.clone().normalize() );
+        var collisionResults = ray.intersectObjects( [obj2] );
+        if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) {
+            console.log("COLLISION")
+            alert("collision")
+        }
+
+        
+    }
     return false;
+    */
  }
 
  export function normalise_vector(vector) {

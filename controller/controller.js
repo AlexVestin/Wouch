@@ -1,10 +1,3 @@
-let get_end = function(len) {
-  let end = "";
-  for(var i = 0; i < 14 - len; i++) {
-    end += "|";
-  }
-  return end;
-}
 
 var msg_list = new Array();
 open = false;
@@ -43,9 +36,13 @@ window.onload = function() {
 
     console.log("??")
     exampleSocket.onopen = function() {
-        console.log("????")
-        send_debug("CLIENT" +get_end("CLIENT".length));
-        send_debug(";" +c + get_end(c.length - 1));
+        send_debug("CLIENT");
+        if(!c) {
+            send_debug(";rando");
+        }else {
+            send_debug(";" +c );
+        }
+        
         open = true;
     }
 
@@ -53,11 +50,11 @@ window.onload = function() {
     var switchButton = document.getElementById("switch");
 
     var sendShoot = function() {
-        send_debug("SHOOT" + get_end("SHOOT".length));
+        send_debug("SHOOT");
         shootButton.style.color = "white";
     }
     var sendSwitch = function() {
-        send_debug("SWITCH" + get_end("SWITCH".length));
+        send_debug("SWITCH" );
         switchButton.style.color = "white";
     }
     var endShoot = function() {
@@ -78,11 +75,11 @@ window.onload = function() {
 
     managerLeft.on('start', function(evt, data) {
       if(open) {
-        send_debug("LEFTSTART" + get_end("LEFTSTART".length));
+        send_debug("LEFTSTART");
       }
       }).on('end', function(evt, data) {
       if(open) {
-        send_debug("LEFTEND" + get_end("LEFTEND".length));
+        send_debug("LEFTEND");
       }
     }).on('move', function(evt, data) {
       if(open) {

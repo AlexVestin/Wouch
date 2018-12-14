@@ -33,12 +33,15 @@ export default class PhysicsEngine {
             // wall collisions
         }
 
+        //console.log("COMBINATIONS?", combinations, gameObjects)
         for(var i = 0; i < combinations.length; i++) {
             let q1 = combinations[i][0];
             let q2 = combinations[i][1];
 
             let x = this.KC *q1.charge*q2.charge;
+
             let vector_p = [q1.x - q2.x, q1.y-q2.y];
+
             let r = get_vector_length(vector_p)
             let force_size;
             if(r) {
@@ -49,14 +52,26 @@ export default class PhysicsEngine {
 
             let vector_np = normalise_vector(vector_p)
             let force = [vector_np[0]*force_size, vector_np[1]*force_size]
+            
             q1.forces.push(force)
             q2.forces.push([-force[0], -force[1]])
 
             if(intersects(q1, q2)) {
-                if(q1.is_dead && !q2.is_player){
+                if(q1.is_player && !q2.is_player){
+                    if(q1 !== q2.player) {
+                        console.log(q1, q2.player)
+                        q2.player.score += 1; 
+                       
+                    }
+                        
                     q1.is_dead = true;
                     return;
-                }else if(q2.is_dead && !q1.is_player){
+                }else if(q2.is_player && !q1.is_player){
+                    if(q2 !== q1.player) {
+                        console.log(q2, q1.player)
+                        q1.player.score += 1; 
+                    }
+                        
                     q2.is_dead = true;
                     return;
                 }
@@ -82,14 +97,15 @@ export default class PhysicsEngine {
                     object.forces.push([vector_v[0]*size, vector_v[1]*size])
                 }
             }
+            
        }
 
 
     updatePos(gameObject){
         gameObject.x = gameObject.x + gameObject.v[0]*this.dt;
         gameObject.y = gameObject.y + gameObject.v[1]*this.dt;
-        gameObject.mesh.position.x = gameObject.x / 1000;
-        gameObject.mesh.position.y = gameObject.y / 1000;
+        gameObject.mesh.position.x = gameObject.x / 600;
+        gameObject.mesh.position.y = gameObject.y / 600;
     }
 
     updateVel(gameObject) {
@@ -100,6 +116,8 @@ export default class PhysicsEngine {
         let friction_force = this.mu*this.g*this.dt;
         gameObject.v[0] += xa*this.dt;
         gameObject.v[1] += ya*this.dt;
+
+        //console.log(gameObject.v, xa, ya, forces, friction_force, this.dt, this.g, this.mu);
         let vector_v_l = get_vector_length(gameObject.v);
         if(vector_v_l < friction_force) {
             vector_v_l = 0;

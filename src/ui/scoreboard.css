@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css?family=Work+Sans');
+
+.list {
+    width: 260px;
+    height: 800px;
+    display:flex;
+    border: 3px solid #555;
+    flex-direction: column;
+    margin-left: 15px;
+}
+
+.item {
+    white-space: nowrap;
+    width: 100%;
+    border-bottom: 1px solid black;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.name {
+    font-family: 'Work Sans', sans-serif;
+
+    font-size: 24px;
+    margin-left: 12px;
+}
+
+.score {
+    font-family: 'Work Sans', sans-serif;
+
+    font-size: 24px;
+    margin-right: 40px;
+}
+
+.header {
+    font-family: 'Work Sans', sans-serif;
+    width: 100%;
+    border-bottom: 1px solid black;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+}

@@ -6,6 +6,6 @@ export default class GameObject {
         this.forces = [];
         this.mass = mass;
         this.is_player = false;
-        this.max_speed = 100;
+        this.max_speed = 140;
     }
 }
