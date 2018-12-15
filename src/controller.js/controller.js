@@ -1,25 +1,33 @@
 
 
 export default class Controller {
-
-    constructor(manager, updatePlayers, removePlayer) {
+ 
+    constructor(manager, updateState) {
         this.exampleSocket = new WebSocket("ws:3.8.115.45:8000");
 
         this.exampleSocket.onopen = () => {
             this.exampleSocket.send("SERVER");
+            this.updateState("SOCKET_OPEN");
         }
 
         this.manager = manager;
         this.exampleSocket.onmessage = (e) => {
             this.handleMessage(e.data);
         }
-        this.updatePlayers = updatePlayers;
-        this.removePlayer = removePlayer;
+
+        this.updateState = updateState;
+        this.hosting = true;
+    }
+
+    send = (msg) => {
+        this.exampleSocket.send(msg);
+        
     }
 
     handleMessage = (data) => {
         let id = String(data.substr(0, 1));
         let msg = String(data.substr(1));
+
         if(id in this.manager.players) {
             if (msg[0] === "*") {
                 this.manager.players[id].direction = Number(msg.substr(1));
@@ -28,17 +36,26 @@ export default class Controller {
             } else if (msg ==="LEFTEND") {
                 this.manager.players[id].joystick_down = false; 
             } else if (msg === "SHOOT"){
-                this.manager.players[id].create_bullet();
+                if(this.hosting)
+                    this.manager.players[id].create_bullet();
             } else if (msg ==="SWITCH") {
                 this.manager.players[id].switchCharge();
             } else if (msg ==="CLOSED") {
-               this.removePlayer(id);
+               this.updateState(msg, [id]);
             }
         }else if (msg[0] === ";") {
             let name = msg.substr(1);
-            this.manager.addPlayer(id, name);
-            this.updatePlayers({[id]: {name: name, score: 0}})
+            if(this.hosting)
+                this.updateState("JOINING", [id, name])
+        }else if(msg[0] === "_") {
+            let data = JSON.parse(msg.substr(1));
+            this.updateState("UPDATE_GAME", data);
+        }else if(msg === "CLONING") {
+            this.hosting =false;
+            this.updateState(msg)    
+        }else if(msg === "HOSTING") {
+            this.updateState(msg)
+            this.hosting=true;
         }
-    
     }
 }

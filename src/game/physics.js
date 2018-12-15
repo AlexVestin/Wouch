@@ -1,5 +1,5 @@
 import { k_combinations, get_vector_length, normalise_vector, intersects, sumForces,elasticCollision, scale } from './helpers'
-
+import * as THREE from 'three'
 export default class PhysicsEngine {
     constructor(dt, friction) {
         this.dt = dt;
@@ -9,7 +9,7 @@ export default class PhysicsEngine {
         this.firstTick = false;
     }
 
-    tick(gameObjects) {
+    tick(gameObjects, hosting) {
         for(var i = 0; i < gameObjects.length; i++) {
             let o1 = gameObjects[i];
             if(o1) {
@@ -19,20 +19,94 @@ export default class PhysicsEngine {
                     this.dt = this.dt*2
                     this.firstTick = false
                  }else {
-                    this.updatePos(o1);
-                    this.updateVel(o1);
+                    this.updatePos(o1, hosting);
+                    this.updateVel(o1, hosting);
                  }
             }
         }
     }
 
-    applyElectroForce(gameObjects) {
-        let combinations = k_combinations(gameObjects, 2);
-         for(var i = 0; i < combinations.length; i++) {
-            let o1 = combinations[i];
-            // wall collisions
+    hitWall = (walls, obj) => {
+
+        for(var i = 0; i < walls.length; i ++) {
+            let wall = walls[i];
+            if(wall.containsBox(obj) || obj.intersectsBox(wall)) {
+                return i;
+             }
+        }
+    
+        return -1;
+    }
+
+    moveOutsieWall = (obj, wall, wallIndex)  => {
+        let box = new THREE.Box3().setFromObject(obj.mesh);
+        const padding = 0.01;
+        let v = normalise_vector(obj.v);
+
+        
+
+        while ( wall.intersectsBox(box)){
+
+           
+            obj.mesh.position.x = obj.x / 600;
+            obj.mesh.position.y = obj.y / 600;
+            box = new THREE.Box3().setFromObject(obj.mesh);
+            box.min.x -= padding;
+            box.min.y -= padding;
+            box.min.z -= padding;
+            box.max.x += padding;
+            box.max.y += padding;
+            box.max.z += padding;
+
+        }
+    }
+
+
+    applyElectroForce(gameObjects, walls) {
+        
+         for(var i = 0; i < gameObjects.length; i++) {
+            let obj = gameObjects[i];
+            let box = new THREE.Box3().setFromObject(obj.mesh);
+            const padding = 0.08;
+
+            for(var j = 0; j < walls.length; j++) {
+                const wall = walls[j];
+                if( box.intersectsBox(wall)) {
+                    switch(j){
+                        //TOP COLLISION
+                        
+                        case 0:
+                            obj.y = (wall.min.y - padding)*600; 
+                            break;
+                        //BOT COLLISION
+                        case 1:
+                            obj.y = (wall.max.y + padding)*600; 
+                            break;
+                        //LEFT
+                        case 2:
+                            obj.x = (wall.max.x + padding)*600; 
+                            break;
+                        //RIGHT
+                        case 3:
+                            obj.x = (wall.min.x - padding)*600;
+                            break;  
+                        default:
+                            break;
+                    
+                    }
+                   
+        
+                    if (j < 2) {
+                        obj.v[1] *=-1
+                    }else {
+                        obj.v[0] *=-1
+                    }  
+                } 
+            } 
+                                        
         }
 
+        let combinations = k_combinations(gameObjects, 2);
         //console.log("COMBINATIONS?", combinations, gameObjects)
         for(var i = 0; i < combinations.length; i++) {
             let q1 = combinations[i][0];
@@ -59,9 +133,7 @@ export default class PhysicsEngine {
             if(intersects(q1, q2)) {
                 if(q1.is_player && !q2.is_player){
                     if(q1 !== q2.player) {
-                        console.log(q1, q2.player)
-                        q2.player.score += 1; 
-                       
+                        q2.player.score += 1;                        
                     }
                         
                     q1.is_dead = true;
@@ -101,11 +173,13 @@ export default class PhysicsEngine {
        }
 
 
-    updatePos(gameObject){
-        gameObject.x = gameObject.x + gameObject.v[0]*this.dt;
-        gameObject.y = gameObject.y + gameObject.v[1]*this.dt;
+    updatePos(gameObject, hosting){
+        const div = !hosting ? (performance.now() - gameObject.lastUpdate)/19 : 1;
+        gameObject.x = gameObject.x + gameObject.v[0]*this.dt*div;
+        gameObject.y = gameObject.y + gameObject.v[1]*this.dt*div;
         gameObject.mesh.position.x = gameObject.x / 600;
         gameObject.mesh.position.y = gameObject.y / 600;
+        gameObject.lastUpdate = performance.now()
     }
 
     updateVel(gameObject) {

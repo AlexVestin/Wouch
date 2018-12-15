@@ -34,7 +34,6 @@ window.onload = function() {
     var url = new URL(window.location.href);
     var c = url.searchParams.get("nick");
 
-    console.log("??")
     exampleSocket.onopen = function() {
         send_debug("CLIENT");
         if(!c) {

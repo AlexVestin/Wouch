@@ -1,5 +1,6 @@
-//FROM https://github.com/caseif/vis.js
 
+/* eslint-disable */
+//FROM https://github.com/caseif/vis.js
 import * as THREE from 'three'
 /* *************************** */
 /* * Basic particle settings * */
