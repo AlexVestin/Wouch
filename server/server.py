@@ -56,6 +56,9 @@ class SimpleServer(WebSocket):
 class Server:
     def __init__(self, url, port):
         self.server = SimpleWebSocketServer(url, port, SimpleServer)
+
+        self.port = port
+        self.url = url
         self.running = True 
     def start(self):
         threading.Thread(target=self.serve).start()
