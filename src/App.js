@@ -4,13 +4,14 @@ import Manager from './game/manager'
 import './App.css';
 import Controller from './controller.js/controller';
 import ScoreBoard from './ui/scoreboard';
+import * as PIXI from 'pixi.js';
 
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.width = 800;
-    this.height = 800;
+    this.width = 1080;
+    this.height = 720;
 
     this.state = {players: {} };
     this.canvasMountRef = React.createRef();
@@ -18,13 +19,30 @@ class App extends Component {
 
 
   componentDidMount() {
+
+
+
+    //this.manager = new Manager(this.renderer, this.updatePlayers);
+    //this.controller = new Controller(this.manager, this.updatePlayers, this.removePlayer);
+  
     // Threejs renderer set-up
-    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    this.renderer.setClearColor('#000000');
-    this.renderer.setSize(this.width, this.height);
-    this.canvasMountRef.current.appendChild(this.renderer.domElement);
-    this.manager = new Manager(this.renderer, this.updatePlayers);
-    this.controller = new Controller(this.manager, this.updatePlayers, this.removePlayer);
+    var app = new PIXI.Application(this.width, this.height, {backgroundColor : 0x1099bb});
+    this.canvasMountRef.current.appendChild(app.view);
+    //document.body.appendChild(app.view);
+    
+    // create a new Sprite from an image path
+    this.bunny = PIXI.Sprite.fromImage('img/pokemon_background.png')
+    
+    // center the sprite's anchor point
+    this.bunny.anchor.set(0.5);
+    
+    // move the sprite to the center of the screen
+    this.bunny.x = app.screen.width / 2;
+    this.bunny.y = app.screen.height / 2;
+    
+    app.stage.addChild(this.bunny);
+    
+    // Listen for animate update
   
     this.renderScene();
   }
@@ -46,7 +64,8 @@ class App extends Component {
   }
 
   renderScene = () => {
-    this.manager.update(this.renderer);
+    //sthis.manager.update();
+    //this.bunny.rotation += 0.1;
     requestAnimationFrame(this.renderScene);
   }
 
@@ -55,7 +74,6 @@ class App extends Component {
       <div className="container">
         <div className="wrapper">
           <div style={{ display: this.state.encoding ? "none" : "" }} ref={this.canvasMountRef}></div>
-          <ScoreBoard players={this.state.players}></ScoreBoard>
         </div>
       </div>
     );
