@@ -54,4 +54,6 @@ class SimpleServer(WebSocket):
        print(self.address, 'closed')
 
 server = SimpleWebSocketServer('', 8000, SimpleServer)
-server.serveforever()
+while True:
+    print(len(server.connections))
+    server.serveonce()

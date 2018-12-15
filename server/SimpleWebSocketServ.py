@@ -578,11 +578,12 @@ class SimpleWebSocketServer(object):
       self.serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
       self.serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
       self.serversocket.bind((host, port))
-      self.serversocket.listen(5)
+      self.serversocket.listen(10)
       self.selectInterval = selectInterval
       self.connections = {}
       self.listeners = [self.serversocket]
       self.messages = []
+      self.last_update_time = 0
 
    def addMessage(self, message):
        self.messages.append(message)
