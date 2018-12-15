@@ -13,6 +13,7 @@ else:
     from BaseHTTPServer import BaseHTTPRequestHandler
     from StringIO import StringIO
 
+import time
 import hashlib
 import base64
 import socket
@@ -583,8 +584,8 @@ class SimpleWebSocketServer(object):
       self.connections = {}
       self.listeners = [self.serversocket]
       self.messages = []
-      self.last_update_time = 0
-
+      self.last_update_time = time.time()
+      
    def addMessage(self, message):
        self.messages.append(message)
 
