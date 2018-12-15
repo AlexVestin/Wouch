@@ -64,10 +64,7 @@ class Server:
         while True and self.running:
             self.server.serveonce()
 
-    def tear_down():
+    def close():
         self.running = False
         self.server.close()
 
-s = Server("0.0.0.0", 8000)
-s.start()
-print("?")
