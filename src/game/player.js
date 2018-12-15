@@ -2,16 +2,15 @@ import Particle from './particle'
 import * as THREE from 'three'
 import { normalise_vector, scale } from './helpers'
 export default class Player extends Particle {
-    constructor(x,y,charge,color,manager, name="", scene=null) {
+    constructor(x,y,charge,color,manager, name="", scene=null, id = null) {
         super(x, y, 20, charge, 100, [0,0], false);
+  
+        this.id = id;
+
         this.name = name
         this.charge = charge
         this.manager = manager
         this.color = color
-        this.up = false
-        this.down = false
-        this.left = false
-        this.right = false
         this.score = 0
         this.max_speed = 140
 
@@ -35,11 +34,28 @@ export default class Player extends Particle {
         if(scene) {
             this.scene = scene;
             var geometry = new THREE.CircleGeometry( 0.1, 6 );
-            var material = new THREE.MeshBasicMaterial( { color: 0x00ff00, wireframe:true } );
+            var material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe:true } );
             material.side = THREE.DoubleSide;
 
             this.mesh = new THREE.Mesh( geometry, material );
             scene.add(this.mesh);
+        }
+    }
+
+    discretize = () => {
+        return {
+            id: this.id,
+            i: this.is_player,
+            n: this.name,
+            m: this.mass,
+            s: this.score,
+            x: this.x,
+            y: this.y,
+            c: this.charge,
+            col: this.color,
+            d: this.is_dead,
+            dir: this.direction,
+            v: this.v,
         }
     }
 
@@ -60,15 +76,16 @@ export default class Player extends Particle {
 
         let charge = this.charge / 3;
         let vec = scale(normalise_vector(this.dir_vec), 170);
-        let bullet = new Particle(x, y, 10, charge, 10, vec, this, this.scene);
+        let bullet = new Particle(x, y, 10, charge, 10, vec, this, this.manager);
         this.manager.objects.push(bullet);
     }
 
-    update() {
+    update(hosting) {
+        this.switchChargeCounter -= 1;
         if (this.joystick_down) {
             this.dir_vec = [Math.cos(this.direction) * this.speed, Math.sin(this.direction) * this.speed]
             this.forces.push(this.dir_vec)
-            this.mesh.rotation.x = Math.cos(this.direction)
+            this.mesh.rotation.x = Math.cos(this.direction) 
             this.mesh.rotation.y = Math.sin(this.direction)
         }
     }

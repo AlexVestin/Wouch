@@ -52,11 +52,20 @@ export function sumForces(q) {
     return [avgX/q.mass, avgY/q.mass];
 }
 
- export function elasticCollision(m1,m2,u1,u2) {
+
+export function isLeft(vector) {
+	
+}
+
+export function isUp(vector) {
+	return vector[0] > 0;
+}
+
+export function elasticCollision(m1,m2,u1,u2) {
     let x = (u1[0]*(m1-m2) + 2*m1*u2[0]) / (m1+m2)
     let y = (u1[1]*(m1-m2) + 2*m1*u2[1]) / (m1+m2)
     return [x, y]
- }
+}
 
  export function scale(vector, mult) {
     return [vector[0]*mult, vector[1]*mult]
@@ -88,6 +97,16 @@ export function sumForces(q) {
     return false;
     */
  }
+
+ export function makeId(len) {
+	var text = "";
+	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  
+	for (var i = 0; i < len; i++)
+	  text += possible.charAt(Math.floor(Math.random() * possible.length));
+  
+	return text;
+  }
 
  export function normalise_vector(vector) {
     let l = get_vector_length(vector);
