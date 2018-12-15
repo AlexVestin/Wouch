@@ -585,7 +585,7 @@ class SimpleWebSocketServer(object):
       self.listeners = [self.serversocket]
       self.messages = []
       self.last_update_time = time.time()
-      
+      self.id_counter = 0 
    def addMessage(self, message):
        self.messages.append(message)
 

@@ -1,6 +1,5 @@
 from SimpleWebSocketServ import SimpleWebSocketServer, WebSocket
 import socket, time, threading
-global_id_counter = 0
 
 class SimpleServer(WebSocket): 
     initialized = False
@@ -9,27 +8,26 @@ class SimpleServer(WebSocket):
     is_host = False
 
     def send_to_servers(self, msg):
-        for client in self.connections.values():
+        for client in self.server.connections.values():
             if not client.is_client and client != self:
                 client.sendMessage(str(chr(self.id) + msg))                
 
     def handleMessage(self):
         self.server.last_update_time = time.time()
-        global global_id_counter
         if "CLIENT" in self.data:
             self.is_client = True
-            self.id = global_id_counter
-            global_id_counter += 1
+            self.id = self.server.id_counter
+            self.server.id_counter += 1
             return
         elif "SERVER" in self.data:
             self.is_client = False
-            self.id = global_id_counter
-            if not [x for x in clients if x.is_host]:
+            self.id = self.server.id_counter
+            if not [x for x in self.server.connections.values() if x.is_host]:
                 self.is_host = True
                 self.sendMessage(chr(self.id)+"HOSTING")
             else:
                 self.sendMessage(chr(self.id)+"CLONING")
-            global_id_counter += 1
+            self.server.id_counter += 1
             return
         # ID handshake
         if self.is_client:
@@ -40,7 +38,6 @@ class SimpleServer(WebSocket):
                  self.send_to_servers(self.data)
         elif self.is_host:
             self.send_to_servers(self.data)
-
     def handleConnected(self):
        print(self.address, 'connected')
        self.server.last_update_time = time.time()
@@ -57,7 +54,7 @@ class SimpleServer(WebSocket):
 
 
 class Server:
-    def __init__(url, port):
+    def __init__(self, url, port):
         self.server = SimpleWebSocketServer(url, port, SimpleServer)
         self.running = True 
     def start(self):
