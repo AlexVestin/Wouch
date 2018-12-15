@@ -1,5 +1,5 @@
 from SimpleWebSocketServ import SimpleWebSocketServer, WebSocket
-import socket
+import socket, time
 clients = []
 global_id_counter = 0
 
@@ -15,6 +15,7 @@ class SimpleServer(WebSocket):
                 client.sendMessage(str(chr(self.id) + msg))                
 
     def handleMessage(self):
+        self.server.last_update_time = time.time()
         global global_id_counter
         if "CLIENT" in self.data:
             self.is_client = True
@@ -44,6 +45,7 @@ class SimpleServer(WebSocket):
     def handleConnected(self):
        print(self.address, 'connected')
        clients.append(self)
+       self.server.last_update_time = time.time()
 
     def handleClose(self):
        if self.is_host:
@@ -52,10 +54,10 @@ class SimpleServer(WebSocket):
                    c.is_host = True
                    c.sendMessage("HOSTING")
                    break
-                
        clients.remove(self)
        self.send_to_servers("CLOSED")
        print(self.address, 'closed')
 
 server = SimpleWebSocketServer('0.0.0.0', 8000, SimpleServer)
-server.serveforever()
+while True:
+    server.serveonce()
