@@ -11,8 +11,13 @@ cron.start()
 app = Flask(__name__)
 rooms = []
 
+
+@app.route("/test")
+def test():
+    return "test"
+
 @app.route("/getroom")
-def hello():
+def getroom():
     last_id = -1
     room_ids = [x.port - 10000 for x in rooms]
     for i in range(100):
@@ -35,3 +40,4 @@ def job_function():
     rooms = [x for x in rooms if x not in to_remove]
 
 atexit.register(lambda: cron.shutdown(wait=False))
+app.run()
