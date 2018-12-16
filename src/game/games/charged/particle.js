@@ -10,6 +10,7 @@ export default class Particle extends GameObject {
         this.size = size;
         this.player = null;
         this.countThreshold = 30;
+        this.switchCD = 10;
         this.switchChargeCounter = 0;
         if(!id) {
             this.id = makeId(4);
@@ -82,7 +83,7 @@ export default class Particle extends GameObject {
                 this.mesh.material.color = new THREE.Color(255, 0, 0);
             }
 
-            this.switchChargeCounter = 5;
+            this.switchChargeCounter = this.switchCD;
         }
        
         

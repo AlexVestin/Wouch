@@ -29,9 +29,10 @@ class App extends PureComponent {
 
     render() {
         if(this.state.redirect) {
+            window.history.pushState(null, null, '/');
             return <Redirect to={this.state.to}></Redirect>
         }
-        
+
         const hostStyle = {...bootstrapButtonStyle,textTransform:"none", backgroundColor: '#3B5998', borderColor: '#3B5998'}
         const contStyle = {...bootstrapButtonStyle,textTransform:"none", backgroundColor: '#F32E06', borderColor: '#F32E06'}
 

@@ -48,7 +48,9 @@ class Join extends PureComponent {
         const contStyle = {...bootstrapButtonStyle,textTransform:"none", backgroundColor: '#F32E06', borderColor: '#F32E06'}
 
         if(this.state.redirect) {
-            const { to, controller, port} = this.state; 
+            const { to, controller, port} = this.state;
+            window.history.pushState(null, null, '/join');
+ 
             return <Redirect to={to + "?room=" + port + "&nick=" + this.nickRef.current.getValue() +"&controller=" + controller}></Redirect>
         }
 

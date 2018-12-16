@@ -56,6 +56,24 @@ export function isLeft(vector) {
 	
 }
 
+export function euclideanDistance(x1, y1, x2, y2) {
+	const a = x1 - x2;
+	const b = y1 - y2;
+	return Math.sqrt( a*a + b*b )
+}
+
+export function sumVectors(arr) {
+	let x  =0;
+	let y= 0;
+	arr.forEach(vec => {
+		x+=vec[0];
+		y+=vec[1];
+	})
+
+	return [x, y]
+
+}
+
 export function isUp(vector) {
 	return vector[0] > 0;
 }

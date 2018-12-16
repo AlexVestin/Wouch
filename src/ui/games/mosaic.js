@@ -1,15 +1,15 @@
 import React, { PureComponent } from 'react'
 import { Redirect } from 'react-router-dom'
 import classes from './mosaic.module.css'
-import photo1 from './stock/1.jpg'
-import photo2 from './stock/2.jpg'
-import photo3 from './stock/3.jpg'
-import photo4 from './stock/4.jpg'
-import photo5 from './stock/5.jpg'
-import photo6 from './stock/6.jpg'
-import photo7 from './stock/7.jpg'
-import photo8 from './stock/8.jpg'
-import photo9 from './stock/9.jpg'
+import photo1 from './video/demo1.webm'
+import photo2 from './video/demo1.webm'
+import photo3 from './video/demo1.webm'
+import photo4 from './video/demo1.webm'
+import photo5 from './video/demo1.webm'
+import photo6 from './video/demo1.webm'
+import photo7 from './video/demo1.webm'
+import photo8 from './video/demo1.webm'
+import photo9 from './video/demo1.webm'
 
 import Image from './image'
 
@@ -28,6 +28,7 @@ export default class MosaicList extends PureComponent {
     }
     render() {
         if(this.state.redirect) {
+            window.history.pushState(null, null, '/games');
             return <Redirect to= {"/game?type=" + this.state.to + "&room="+this.state.port}></Redirect> 
         }
 

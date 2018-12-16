@@ -61,7 +61,7 @@ export default class PhysicsEngine {
          for(var i = 0; i < gameObjects.length; i++) {
             let obj = gameObjects[i];
             let box = new THREE.Box3().setFromObject(obj.mesh);
-            const padding = 0.08;
+            const padding = 0.1;
 
             for(var j = 0; j < walls.length; j++) {
                 const wall = walls[j];
@@ -104,9 +104,7 @@ export default class PhysicsEngine {
         for(var k = 0; k < combinations.length; k++) {
             let q1 = combinations[k][0];
             let q2 = combinations[k][1];
-
             let x = this.KC*q1.charge*q2.charge;
-
             let vector_p = [q1.x-q2.x, q1.y-q2.y];
 
             let r = get_vector_length(vector_p)
@@ -125,23 +123,33 @@ export default class PhysicsEngine {
 
             if(intersects(q1, q2)) {
                 if(q1.is_player && !q2.is_player){
-                    if(q1 !== q2.player) {
-                        q2.player.score += 1;                        
-                    }else {
-                        q2.player.score -= 1;
+
+                    if(!q1.respawning) {
+                        if(q1 !== q2.player) {
+                            q2.player.score += 1;                        
+                        }else {
+                            q2.player.score -= 1;
+                        }
+                        q1.is_dead = true;
+                        return;
                     }
+                   
                         
-                    q1.is_dead = true;
-                    return;
+                    
+                    
                 }else if(q2.is_player && !q1.is_player){
-                    if(q2 !== q1.player) {
-                        q1.player.score += 1; 
-                    }else {
-                        q1.player.score -= 1;
-                    }
-                        
-                    q2.is_dead = true;                    
-                    return;
+
+                    if(!q1.respawning) {
+                        if(q2 !== q1.player) {
+                            q1.player.score += 1; 
+                        }else {
+                            q1.player.score -= 1;
+                        }
+                            
+                        q2.is_dead = true;
+                        return;
+                    }                    
+                    
                 }
 
                 let q1_before = sumForces(q1);

@@ -7,6 +7,10 @@ import RenderPass from './postprocessing/passes/renderpass'
 import UnrealBloomPass from './postprocessing/passes/unrealbloompass'
 import EffectComposer from './postprocessing/effectcomposer'
 import Particle from './particle';
+import Enemy from './enemy'
+import { makeId } from './helpers'
+import DeathAnimation from './deathanimation'
+
 
 export default class Manager {
 
@@ -19,9 +23,31 @@ export default class Manager {
         this.isHosting = true;
         this.events = [];
         this.positions = [];
+        this.deathAnimations = [];
         this.postProcessing = true;
         this.setUpScene()
 
+    }
+
+    createDeathAnimation = (player) => {
+        const verts = [];
+        const geo = player.mesh.geometry;
+        geo.faces.forEach(face => {
+            var geometry = new THREE.Geometry();
+
+            const a = geo.vertices[face.a].clone();
+            const b = geo.vertices[face.b].clone();
+            const c = geo.vertices[face.c].clone();
+            geometry.vertices.push(a);
+            geometry.vertices.push(b);
+            geometry.vertices.push(c);
+            geometry.faces.push(new THREE.Face3(0, 1, 2));
+            const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: player.mesh.material.color, wireframe: true, transparent: true }))
+            mesh.position.copy(player.mesh.position);
+            verts.push(mesh);
+            this.scene.add(mesh);
+        })
+        this.deathAnimations.push(new DeathAnimation(verts, this));
     }
 
 
@@ -32,18 +58,20 @@ export default class Manager {
             if (this.players.hasOwnProperty(key)) {
                 this.players[key].update(this.isHosting);
 
-                
-                }
             }
-        
+        }
+
     }
 
 
     updateGame = () => {
         Object.keys(this.players).forEach(key => {
             if (this.players[key].is_dead) {
+                this.createDeathAnimation(this.players[key])
+                this.players[key].respawn()
                 this.players[key].is_dead = false;
-                for (var i =  this.objects.length - 1; i >= 0; i--) {
+
+                for (var i = this.objects.length - 1; i >= 0; i--) {
                     let item = this.objects[i];
                     if (!item.is_player) {
                         this.scene.remove(item.mesh);
@@ -55,7 +83,7 @@ export default class Manager {
 
         this.physicsEngine.applyElectroForce(this.objects, this.walls);
         this.physicsEngine.tick(this.objects, this.isHosting);
-
+        this.deathAnimations.forEach(d => d.update())
     }
 
     packageGameInfo = () => {
@@ -67,7 +95,7 @@ export default class Manager {
 
     loadGameFromInfo = (info) => {
         if (info) {
-            this.objects.forEach(e => e.shouldKeep=false);
+            this.objects.forEach(e => e.shouldKeep = false);
 
             info.forEach(obj => {
                 obj.shouldKeep = true;
@@ -83,7 +111,7 @@ export default class Manager {
                         this.players[player.id] = player;
                         this.objects.push(player)
                     }
-                }else {
+                } else {
                     this.objects[index].shouldKeep = true;
                 }
             });
@@ -98,7 +126,7 @@ export default class Manager {
 
                     let o = this.objects[i];
                     o.lastUpdate = performance.now()
-                    
+
                     o.x = obj.x;
                     o.y = obj.y;
                     o.v = obj.v;
@@ -113,7 +141,7 @@ export default class Manager {
                         o.name = obj.name;
                         o.direction = obj.dir;
 
-                      
+
                         o.mesh.rotation.y = Math.sin(o.direction);
                         o.mesh.rotation.x = Math.cos(o.direction);
                     }
@@ -135,12 +163,12 @@ export default class Manager {
 
     render = (renderer) => {
         this.particles.animate();
-        if(!this.postProcessing) {
+        if (!this.postProcessing) {
             renderer.render(this.scene, this.camera)
-        }else {
+        } else {
             this.composer.render()
         }
-        
+
         //
     }
 
@@ -149,6 +177,7 @@ export default class Manager {
         if (!gameData) {
             this.updateGame();
             this.packageGameInfo();
+
         } else {
             this.loadGameFromInfo(gameData);
         }
@@ -172,9 +201,9 @@ export default class Manager {
         this.scene.add(this.particles.mesh);
 
         const size = 2.5;
-        this.camera.position.z = size*2.7;
-        
-        this.gridHelper = new THREE.GridHelper(size*2, size*6);
+        this.camera.position.z = size * 2.7;
+
+        this.gridHelper = new THREE.GridHelper(size * 2, size * 6);
 
         this.gridHelper.position.z = 0;
         this.gridHelper.rotation.x = Math.PI / 2;
@@ -192,10 +221,10 @@ export default class Manager {
         this.gridBox.min.z = -2;
         this.gridBox.max.z = 2;
 
-        let topBox = new THREE.Box3(new THREE.Vector3( -size, size, -size ), new THREE.Vector3( size, size*2, size ))
-        let botBox = new THREE.Box3(new THREE.Vector3( -size, -size*2, -size ), new THREE.Vector3( size, -size, size ))
-        let leftBox = new THREE.Box3(new THREE.Vector3( -size*2, -size, -size ), new THREE.Vector3( -size, size, size ))
-        let rightBox = new THREE.Box3(new THREE.Vector3( size, -size, -size ), new THREE.Vector3( size*2, size, size ))
+        let topBox = new THREE.Box3(new THREE.Vector3(-size, size, -size), new THREE.Vector3(size, size * 2, size))
+        let botBox = new THREE.Box3(new THREE.Vector3(-size, -size * 2, -size), new THREE.Vector3(size, -size, size))
+        let leftBox = new THREE.Box3(new THREE.Vector3(-size * 2, -size, -size), new THREE.Vector3(-size, size, size))
+        let rightBox = new THREE.Box3(new THREE.Vector3(size, -size, -size), new THREE.Vector3(size * 2, size, size))
         /*
         var topHelper = new THREE.Box3Helper( topBox, 0xffff00 );
         this.scene.add( topHelper );
@@ -212,12 +241,19 @@ export default class Manager {
             leftBox,
             rightBox
         ]
+        this.addPlayer(makeId(4), "Comp1", true);
+        this.addPlayer(makeId(4), "Comp2", true);
     }
 
-    addPlayer = (id, name) => {
+    addPlayer = (id, name, isEnemy = false) => {
         let x = 200 + Math.floor(Math.random() * 600);
         let y = 200 + Math.floor(Math.random() * 600);
-        this.players[id] = new Player(x, y, 0.01, (0, 255, 0), this, name, this.scene, id);
+        if (!isEnemy) {
+            this.players[id] = new Player(x, y, 0.015, (0, 255, 0), this, name, this.scene, id);
+        } else {
+            this.players[id] = new Enemy(x, y, 0.015, (0, 255, 0), this, name, id);
+        }
+
         this.objects.push(this.players[id]);
     }
 }

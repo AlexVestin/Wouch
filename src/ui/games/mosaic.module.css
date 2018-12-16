@@ -19,11 +19,12 @@
     height: 260px;
     transition: all .14s ease-in-out;
     margin-left: 5px;
+    background-color: rgba(255,255,255,0.1);
 }
 
 .textGroup {
     font-family: 'Major Mono Display', monospace;
-
+    pointer-events: none;
     visibility:hidden;
     position: absolute;
     z-index: 2;

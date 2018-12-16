@@ -6,7 +6,7 @@ import * as THREE from 'three'
 /* * Basic particle settings * */
 /* *************************** */
 // COUNT
-var baseParticleCount = 1000; // the number of particles at 1080p
+var baseParticleCount = 250; // the number of particles at 1080p
 var fleckCount = 50; // total fleck count
 var bokehCount = 250; // total bokeh count
 // OPACITY

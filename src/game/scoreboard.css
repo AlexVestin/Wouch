@@ -21,16 +21,17 @@
 
 .name {
     font-family: 'Work Sans', sans-serif;
-
-    font-size: 24px;
-    margin-left: 12px;
+    width: 50%;
+    font-size: 20px;
+    text-align: center;
+    border-right: 1px solid black;
 }
 
 .score {
     font-family: 'Work Sans', sans-serif;
-
-    font-size: 24px;
-    margin-right: 40px;
+    width: 50%;
+    font-size: 20px;
+    margin-left: 6px;
 }
 
 .header {
