@@ -54,9 +54,9 @@ class SimpleServer(WebSocket):
 
 
 class Server:
-    def __init__(self, url, port):
+    def __init__(self, url, port, controller):
         self.server = SimpleWebSocketServer(url, port, SimpleServer)
-
+        self.controller = controller
         self.port = port
         self.url = url
         self.running = True 
