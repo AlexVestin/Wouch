@@ -22,7 +22,7 @@ send = function() {
 }
 
 window.onload = function() {
-    exampleSocket = new WebSocket("ws:3.8.115.45:8000");
+    exampleSocket = new WebSocket("ws:3.8.115.45:10004");
 
     var optionsLeft = {
         zone: document.getElementById("left_controller"),

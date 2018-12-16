@@ -2,8 +2,8 @@
 
 export default class Controller {
  
-    constructor(manager, updateState) {
-        this.exampleSocket = new WebSocket("ws:3.8.115.45:8000");
+    constructor(port, manager, updateState) {
+        this.exampleSocket = new WebSocket("ws:3.8.115.45:" + port);
 
         this.exampleSocket.onopen = () => {
             this.exampleSocket.send("SERVER");
@@ -21,7 +21,6 @@ export default class Controller {
 
     send = (msg) => {
         this.exampleSocket.send(msg);
-        
     }
 
     handleMessage = (data) => {

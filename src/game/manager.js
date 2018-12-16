@@ -10,12 +10,11 @@ import Particle from './particle';
 
 export default class Manager {
 
-    constructor(renderer, updatePlayers) {
+    constructor(renderer) {
 
         this.physicsEngine = new PhysicsEngine(0.15, 4.5);
         this.objects = [];
         this.players = {};
-        this.updatePlayers = updatePlayers;
         this.renderer = renderer;
         this.isHosting = true;
         this.events = [];
@@ -39,6 +38,7 @@ export default class Manager {
         
     }
 
+
     updateGame = () => {
         Object.keys(this.players).forEach(key => {
             if (this.players[key].is_dead) {
@@ -50,11 +50,6 @@ export default class Manager {
                         this.objects.splice(i, 1);
                     }
                 }
-                this.players[key].score -= 1;
-                this.updatePlayers({ [key]: { name: this.players[key].name, score: this.players[key].score } });
-                this.events.push({ "dead": key })
-
-                console.log(this.objects);
             }
         })
 
@@ -183,10 +178,6 @@ export default class Manager {
 
         this.gridHelper.position.z = 0;
         this.gridHelper.rotation.x = Math.PI / 2;
-        
-        
-        
-
         this.scene.add(this.gridHelper);
 
         var renderScene = new RenderPass(this.scene, this.camera);
@@ -197,15 +188,10 @@ export default class Manager {
         bloomPass.renderToScreen = true;
         this.composer.addPass(bloomPass);
 
-
-        
-        
         this.gridBox = new THREE.Box3().setFromObject(this.gridHelper);
         this.gridBox.min.z = -2;
         this.gridBox.max.z = 2;
 
-        
-        
         let topBox = new THREE.Box3(new THREE.Vector3( -size, size, -size ), new THREE.Vector3( size, size*2, size ))
         let botBox = new THREE.Box3(new THREE.Vector3( -size, -size*2, -size ), new THREE.Vector3( size, -size, size ))
         let leftBox = new THREE.Box3(new THREE.Vector3( -size*2, -size, -size ), new THREE.Vector3( -size, size, size ))

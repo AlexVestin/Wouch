@@ -44,7 +44,7 @@ export default class Particle extends GameObject {
         this.count -= 1;
         
         this.mesh.rotation.z += 0.1;
-        this.switchChargeCounter -= 1;
+        
         if(this.count <= 0 ) {
             const index = this.manager.objects.findIndex(e => this.id === e.id);
             this.manager.objects.splice(index, 1);

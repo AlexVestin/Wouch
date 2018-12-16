@@ -52,7 +52,6 @@ export function sumForces(q) {
     return [avgX/q.mass, avgY/q.mass];
 }
 
-
 export function isLeft(vector) {
 	
 }

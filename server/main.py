@@ -4,20 +4,19 @@ import time
 
 #Schedule removal of rooms
 import atexit
-from apscheduler.scheduler import Scheduler
-cron = Scheduler(daemon=True)
-cron.start()
+from apscheduler.schedulers.background import BackgroundScheduler
+cron = BackgroundScheduler()
 
 app = Flask(__name__)
 rooms = []
-
 
 @app.route("/test")
 def test():
     return "test"
 
 @app.route("/getroom")
-def getroom():
+def hello():
+    global rooms
     last_id = -1
     room_ids = [x.port - 10000 for x in rooms]
     for i in range(100):
@@ -26,18 +25,22 @@ def getroom():
             s.start()
             rooms.append(s)
             last_id = 10000 + i
-       
+            break 
     return str(last_id)
 
-@cron.interval_schedule(minutes=5)
 def job_function():
+    global rooms
     to_remove = []
     for room in rooms:
         if time.time() - room.server.last_update_time > 300:
             room.close()
             to_remove.push(room)
-    
     rooms = [x for x in rooms if x not in to_remove]
+    print("ROOMS UPDATED")
+    print("current rooms active: ", len(rooms))
 
+cron.add_job(job_function, "interval", minutes=1)
+cron.start()
 atexit.register(lambda: cron.shutdown(wait=False))
-app.run()
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=80)

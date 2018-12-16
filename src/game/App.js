@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import * as THREE from 'three'
 import Manager from './manager'
 import './App.css';
-import Controller from '../controller.js/controller';
+import Controller from '../controller/server';
 import ScoreBoard from '../ui/scoreboard';
 
 
@@ -15,8 +15,10 @@ class App extends Component {
     this.state = {players: {} };
     this.canvasMountRef = React.createRef();
     this.sendGameInfoCounter = 60;
-  }
 
+    var url = new URL(window.location.href);
+    this.port = url.searchParams.get("room");
+  }
 
   componentDidMount() {
     // Threejs renderer set-up
@@ -24,8 +26,8 @@ class App extends Component {
     this.renderer.setClearColor('#000000');
     this.renderer.setSize(this.width, this.height);
     this.canvasMountRef.current.appendChild(this.renderer.domElement);
-    this.manager = new Manager(this.renderer, this.updatePlayers);
-    this.controller = new Controller(this.manager, this.updateState);
+    this.manager = new Manager(this.renderer);
+    this.controller = new Controller(this.port, this.manager, this.updateState);
   }
 
   updateState = (msg, args) => {
@@ -47,7 +49,6 @@ class App extends Component {
           break;
         case "JOINING":
           this.manager.addPlayer(args[0], args[1]);
-          this.updatePlayers({[args[0]]: {name: args[1], score: 0}})
           break;
         default:
           console.log("UNKNOWN TYPE")
@@ -56,8 +57,9 @@ class App extends Component {
 
   updatePlayers = (players) => {
     let p1 = Object.assign({}, this.state.players);
-    Object.keys(players).forEach(key => {
-      p1[key] = players[key]; 
+    Object.keys(this.manager.players).map(key => {
+      let player = this.manager.players[key];
+      p1[player.id] = {name:player.name,  score:player.score} 
     })
     this.setState({players: p1});
   }
@@ -74,7 +76,8 @@ class App extends Component {
     if(this.manager.isHosting && this.sendGameInfoCounter <= 0) {
       //let st = "_"+JSON.stringify(this.manager.gameInformation)
       //this.controller.send(st);
-      this.sendGameInfoCounter = 1;
+      this.updatePlayers();
+      this.sendGameInfoCounter = 10;
     }
 
     this.sendGameInfoCounter -= 1

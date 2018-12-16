@@ -11,6 +11,7 @@
 
 .item {
     white-space: nowrap;
+    overflow: hidden;
     width: 100%;
     border-bottom: 1px solid black;
     display: flex;
