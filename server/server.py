@@ -67,7 +67,7 @@ class Server:
         while True and self.running:
             self.server.serveonce()
 
-    def close():
+    def close(self):
         self.running = False
         self.server.close()
 

@@ -1,17 +1,20 @@
 from flask import Flask
 from server import Server
 import time
+from flask_cors import CORS, cross_origin
 
 #Schedule removal of rooms
 import atexit
 from apscheduler.schedulers.background import BackgroundScheduler
 cron = BackgroundScheduler()
 
-
 app = Flask(__name__)
+cors = CORS(app)
+
 rooms = []
 
 @app.route("/getroom")
+@cross_origin()
 def hello():
     global rooms
     last_id = -1
@@ -31,7 +34,7 @@ def job_function():
     for room in rooms:
         if time.time() - room.server.last_update_time > 300:
             room.close()
-            to_remove.push(room)
+            to_remove.append(room)
     rooms = [x for x in rooms if x not in to_remove]
     print("ROOMS UPDATED")
     print("current rooms active: ", len(rooms))
