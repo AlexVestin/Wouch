@@ -12,10 +12,11 @@ export default class ScoreBoard extends PureComponent {
                         Players
                     </div>
                     {Object.keys(players).map(key => {
+                        const name = players[key].name
                         return (
                             <div key={players[key].id} className="item">
                                 <div className="name">
-                                    {players[key].name}
+                                    {name.substr(0,7) + (name.length > 7 ? "..." : "")}
                                 </div>
                                 |
                                 <div className="score">

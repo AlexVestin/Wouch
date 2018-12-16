@@ -13,6 +13,10 @@ cors = CORS(app)
 
 rooms = []
 
+@app.route("/test")
+def test():
+    return "test"
+
 @app.route("/getroom")
 @cross_origin()
 def hello():

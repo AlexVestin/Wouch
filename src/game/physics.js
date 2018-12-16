@@ -134,17 +134,20 @@ export default class PhysicsEngine {
                 if(q1.is_player && !q2.is_player){
                     if(q1 !== q2.player) {
                         q2.player.score += 1;                        
+                    }else {
+                        q2.player.score -= 1;
                     }
                         
                     q1.is_dead = true;
                     return;
                 }else if(q2.is_player && !q1.is_player){
                     if(q2 !== q1.player) {
-                        console.log(q2, q1.player)
                         q1.player.score += 1; 
+                    }else {
+                        q1.player.score -= 1;
                     }
                         
-                    q2.is_dead = true;
+                    q2.is_dead = true;                    
                     return;
                 }
 
@@ -155,6 +158,8 @@ export default class PhysicsEngine {
                 let q2_after = elasticCollision(q2.mass, q1.mass, q2_before, q1_before);
                 q1.v = scale(q1_after, 1/4);
                 q2.v = scale(q2_after, 1/4);
+
+                
             }
         }
     }
