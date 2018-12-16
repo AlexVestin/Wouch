@@ -25,24 +25,31 @@ class Join extends PureComponent {
         super(props)
         this.roomRef = React.createRef();
         this.nickRef = React.createRef();
-        this.state = {to: "", redirect: false, port: 0}
+        this.state = {to: "", redirect: false, port: 0, index: 0, controller: ""}
     }
 
-    redirectGame = () => {
-        fetch("http://3.8.115.45/getroom").then((response) => {
-            return response.text(); 
-        }).then((text) => {
-            this.setState({redirect: true, port: text, to: "game"});
+
+    requestController = () => {
+            fetch("http://3.8.115.45/getcontroller",  {
+                method: "POST",
+                body: this.roomRef.current.getValue()
+            }).then((response) => {
+                return response.text(); 
+            }).then((text) => {
+                console.log(text)
+                this.setState({index: 1, controller: text, port: this.roomRef.current.getValue()});
         });
+        
     }
 
-    redirectCont = () => this.setState({redirect: true, to: "controller", port: this.roomRef.current.getValue()});
+    redirectCont = () => this.setState({redirect: true, to: "controller"});
 
     render() {
         const contStyle = {...bootstrapButtonStyle,textTransform:"none", backgroundColor: '#F32E06', borderColor: '#F32E06'}
 
         if(this.state.redirect) {
-            return <Redirect to={this.state.to + "?room=" + this.state.port + "&nick=" + this.nickRef.current.getValue()}></Redirect>
+            const { to, controller, port} = this.state; 
+            return <Redirect to={to + "?room=" + port + "&nick=" + this.nickRef.current.getValue() +"&controller=" + controller}></Redirect>
         }
 
         return (
@@ -53,12 +60,18 @@ class Join extends PureComponent {
                         </div>
 
                     <div className={classes.wrapper}>
-
-                        <form className={classes.form} onSubmit={this.submit}>        
-                            <TextInput fullwidth ref={this.nickRef} className={classes.input} type="text" label="nickname"></TextInput>
-                            <TextInput ref={this.roomRef} className={classes.input} type="number" label="room code"></TextInput>
-                            <Button style={contStyle} className={classes.socbutton} onClick={this.redirectCont}>Join</Button>
-                        </form>
+                        {this.state.index === 0 ? 
+                            <div className={classes.form} >        
+                                <TextInput ref={this.roomRef} className={classes.input} type="number" label="room code"></TextInput>
+                                <Button style={contStyle} className={classes.socbutton} onClick={this.requestController}>Next</Button>
+                            </div>
+                        :
+                            <div className={classes.form}>        
+                                <TextInput ref={this.nickRef} className={classes.input} type="text" label="Nickname"></TextInput>
+                                <Button style={contStyle} className={classes.socbutton} onClick={this.redirectCont}>Join</Button>
+                            </div>
+                        }
+                    
                     </div>
                 </div>
             </div>

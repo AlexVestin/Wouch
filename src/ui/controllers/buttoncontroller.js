@@ -6,83 +6,43 @@ export default class Controller extends PureComponent {
 
     constructor() {
         super();
-
-        this.open = false;
-        this.messageQueue = [];
         this.shootRef = React.createRef();
         this.leftControllerRef = React.createRef();
         this.switchRef = React.createRef();
         this.nippleMount = React.createRef();
     }
 
-    sendMessage = () => {
-        if(this.open && this.messageQueue.length > 0) {
-            this.send(this.messageQueue[this.messageQueue.length - 1]);
-            this.messageQueue = [];
-            
-        }
-    }
-
-    send = (msg) => {
-        this.exampleSocket.send(msg);
-    }
-
-    openSocket = () => {
-        var url = new URL(window.location.href);
-        var c = url.searchParams.get("nick");
-        var port = url.searchParams.get("room");
-        this.exampleSocket = new WebSocket("ws:3.8.115.45:" + port);
-
-        this.exampleSocket.onopen = () => {
-            this.send("CLIENT");
-            this.send(c ? ";" + c : ";rando");
-            this.open = true;
-        }
-    }
- 
     handleNipple = () => {
         var optionsLeft = {
             zone: this.leftControllerRef.current,
             mode: 'static',
-            position: {left: '50%', top: '50%'}
+            position: {left: '40%', top: '60%'}
         }
         this.managerLeft = nipplejs.create(optionsLeft);
         this.managerLeft.on('start', () => {
-            if (this.open) {
-                this.send("LEFTSTART");
-            }
+            this.props.send("LEFTSTART");            
         }).on('end', () => {
-            if (this.open) {
-                this.send("LEFTEND");
-            }
+            this.props.send("LEFTEND");
         }).on('move', (evt, data) => {
-            if (this.open) {
-                let str = "*" + data.angle.radian.toString().substring(0, 4);
-                this.messageQueue.push(str);                
-            }
+            let str = "*" + data.angle.radian.toString().substring(0, 4);
+            this.props.addMessage(str);            
         });
     }
 
     componentDidMount = () => {
-        this.openSocket();
         this.handleNipple();
 
-        if (window.screen) {
-            if(window.screen.orientation)
-                window.screen.orientation.lock('landscape').catch(function(error) {
-                    // whatever
-                });
+        if (window.screen && window.screen.orientation) {
+            window.screen.orientation.lock('landscape').catch((error) => {});
         }
         
         window.scrollTo(0,1);
-
-
         var shootButton = this.shootRef.current;
         var switchButton = this.switchRef.current;
     
-        var sendShoot = () => { this.send("SHOOT"); }
-        var sendSwitch = () => { this.send("SWITCH" ); }
-        var endShoot = () => { shootButton.style.color = "black"; console.log("???")}
+        var sendShoot = () => { this.props.send("SHOOT"); }
+        var sendSwitch = () => { this.props.send("SWITCH" ); }
+        var endShoot = () => { shootButton.style.color = "black"; }
         var endSwitch = () => { switchButton.style.color = "black"; }
 
         const touchStartShoot = (e) => {
@@ -103,7 +63,6 @@ export default class Controller extends PureComponent {
         shootButton.addEventListener("touchend", endShoot, false);
         shootButton.addEventListener("click", sendShoot, false);
         switchButton.addEventListener("click", sendSwitch, false);
-        setInterval(this.sendMessage, 25);
     }
 
     render() {
@@ -114,7 +73,7 @@ export default class Controller extends PureComponent {
                     <button ref={this.shootRef} className={classes.button} id="shoot">A</button>
                     <button ref={this.switchRef} className={classes.button} id="switch">B</button>
                 </div>
-        </div>
+            </div>
         )
     }
 }

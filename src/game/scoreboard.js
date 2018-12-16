@@ -5,7 +5,6 @@ export default class ScoreBoard extends PureComponent {
 
     render() {
         const players = this.props.players;
-        console.log(players);
         return(
             <div className="list">
                     <div className="header">

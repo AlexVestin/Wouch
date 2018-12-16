@@ -196,16 +196,16 @@ export default class Manager {
         let botBox = new THREE.Box3(new THREE.Vector3( -size, -size*2, -size ), new THREE.Vector3( size, -size, size ))
         let leftBox = new THREE.Box3(new THREE.Vector3( -size*2, -size, -size ), new THREE.Vector3( -size, size, size ))
         let rightBox = new THREE.Box3(new THREE.Vector3( size, -size, -size ), new THREE.Vector3( size*2, size, size ))
-
+        /*
         var topHelper = new THREE.Box3Helper( topBox, 0xffff00 );
-        //this.scene.add( topHelper );
+        this.scene.add( topHelper );
         var botHelper = new THREE.Box3Helper( botBox, 0xffff00 );
-        //this.scene.add( botHelper );
+        this.scene.add( botHelper );
         var leftHelper = new THREE.Box3Helper( leftBox, 0xffff00 );
-        //this.scene.add( leftHelper );
+        this.scene.add( leftHelper );
         var rightHelper = new THREE.Box3Helper( rightBox, 0xffff00 );
-        //this.scene.add( rightHelper );
-
+        this.scene.add( rightHelper );
+        */
         this.walls = [
             topBox,
             botBox,
