@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import * as THREE from 'three'
 import Manager from './manager'
 import './App.css';
-import Controller from '../controller/server';
-import ScoreBoard from '../ui/scoreboard';
+import Controller from './networking/server';
+import ScoreBoard from '../../scoreboard';
 
 
 class App extends Component {
@@ -57,7 +57,7 @@ class App extends Component {
 
   updatePlayers = (players) => {
     let p1 = Object.assign({}, this.state.players);
-    Object.keys(this.manager.players).map(key => {
+    Object.keys(this.manager.players).forEach(key => {
       let player = this.manager.players[key];
       p1[player.id] = {name:player.name,  score:player.score} 
     })
@@ -74,8 +74,6 @@ class App extends Component {
 
   renderScene = () => {
     if(this.manager.isHosting && this.sendGameInfoCounter <= 0) {
-      //let st = "_"+JSON.stringify(this.manager.gameInformation)
-      //this.controller.send(st);
       this.updatePlayers();
       this.sendGameInfoCounter = 10;
     }

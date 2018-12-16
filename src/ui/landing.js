@@ -2,8 +2,6 @@ import React, {PureComponent} from "react";
 import  {Redirect} from 'react-router-dom';
 import Button from '@material-ui/core/Button'
 import classes from './landing.module.css';
-import TextInput from './textinput'
-
 
 const bootstrapButtonStyle = {
     marginLeft: 15,
@@ -26,24 +24,16 @@ class App extends PureComponent {
         this.state = {to: "", redirect: false, port: 0}
     }
 
-    redirectGame = () => {
-        fetch("http://3.8.115.45/getroom").then((response) => {
-            return response.text(); 
-        }).then((text) => {
-            this.setState({redirect: true, port: text, to: "game"});
-        });
-    }
-
+    redirectGame = () => this.setState({redirect: true, to: "games"});
     redirectCont = () => this.setState({redirect: true, to: "join"});
 
     render() {
+        if(this.state.redirect) {
+            return <Redirect to={this.state.to}></Redirect>
+        }
+        
         const hostStyle = {...bootstrapButtonStyle,textTransform:"none", backgroundColor: '#3B5998', borderColor: '#3B5998'}
         const contStyle = {...bootstrapButtonStyle,textTransform:"none", backgroundColor: '#F32E06', borderColor: '#F32E06'}
-
-        if(this.state.redirect) {
-            let url = this.state.to === "join" ? this.state.to :  this.state.to + "?room=" + this.state.port
-            return <Redirect to={url}></Redirect>
-        }
 
         return (
         <div className={classes.container}>

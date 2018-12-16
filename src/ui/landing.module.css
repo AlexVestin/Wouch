@@ -15,8 +15,7 @@
     background-image: url("./maxresdefault.jpg");
 
     background-color: #aaa;
-    background-attachment: fixed;
-    background-size: cover;
+
     overflow:hidden;
     border-bottom: 1px solid gray;
 }

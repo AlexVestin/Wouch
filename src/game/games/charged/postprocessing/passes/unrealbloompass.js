@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /**
  * @author spidersharma / http://eduperiment.com/
  *

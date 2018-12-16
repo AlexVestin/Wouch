@@ -41,13 +41,8 @@ export default class PhysicsEngine {
     moveOutsieWall = (obj, wall, wallIndex)  => {
         let box = new THREE.Box3().setFromObject(obj.mesh);
         const padding = 0.01;
-        let v = normalise_vector(obj.v);
-
         
-
         while ( wall.intersectsBox(box)){
-
-           
             obj.mesh.position.x = obj.x / 600;
             obj.mesh.position.y = obj.y / 600;
             box = new THREE.Box3().setFromObject(obj.mesh);
@@ -57,7 +52,6 @@ export default class PhysicsEngine {
             box.max.x += padding;
             box.max.y += padding;
             box.max.z += padding;
-
         }
     }
 
@@ -94,8 +88,7 @@ export default class PhysicsEngine {
                             break;
                     
                     }
-                   
-        
+            
                     if (j < 2) {
                         obj.v[1] *=-1
                     }else {
@@ -108,13 +101,13 @@ export default class PhysicsEngine {
 
         let combinations = k_combinations(gameObjects, 2);
         //console.log("COMBINATIONS?", combinations, gameObjects)
-        for(var i = 0; i < combinations.length; i++) {
-            let q1 = combinations[i][0];
-            let q2 = combinations[i][1];
+        for(var k = 0; k < combinations.length; k++) {
+            let q1 = combinations[k][0];
+            let q2 = combinations[k][1];
 
-            let x = this.KC *q1.charge*q2.charge;
+            let x = this.KC*q1.charge*q2.charge;
 
-            let vector_p = [q1.x - q2.x, q1.y-q2.y];
+            let vector_p = [q1.x-q2.x, q1.y-q2.y];
 
             let r = get_vector_length(vector_p)
             let force_size;
@@ -158,8 +151,6 @@ export default class PhysicsEngine {
                 let q2_after = elasticCollision(q2.mass, q1.mass, q2_before, q1_before);
                 q1.v = scale(q1_after, 1/4);
                 q2.v = scale(q2_after, 1/4);
-
-                
             }
         }
     }
