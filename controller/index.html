@@ -1,58 +1,60 @@
 <!------ Include the above in your HEAD tag ---------->
 
 <html>
-    <head>
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-        <link href="style_index.css" rel="stylesheet">
-        <!------ Include the above in your HEAD tag ---------->
-    </head>
 
-    <body id="LoginForm">
-        <div class="container">
-            <h1 class="form-heading"></h1>
-            <div class="login-form">
-                <div class="main-div">
-                    <div class="panel">
-                        <h2>Pulse Controller</h2>
-                        <p>Please enter room ID and your nickname</p>
+<head>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link href="style_index.css" rel="stylesheet">
+    <!------ Include the above in your HEAD tag ---------->
+</head>
+
+<body id="LoginForm">
+    <div class="container">
+        <h1 class="form-heading"></h1>
+        <div class="login-form">
+            <div class="main-div">
+                <div class="panel">
+                    <h2>Pulse Controller</h2>
+                    <p>Please enter room ID and your nickname</p>
+                </div>
+                <div id="Login">
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="inputPassword" placeholder="Nickname (max 5 chars)"
+                            maxlength="10">
                     </div>
-                    <div id="Login">
 
-                        <div class="form-group">
-                            <input type="text" class="form-control" id="inputPassword" placeholder="Nickname (max 5 chars)" maxlength="10">
-                        </div>
-
-                        <button id="submit"  class="btn btn-primary">Enter!</button>
-                    </form>
+                    <button id="submit" class="btn btn-primary">Enter!</button>
                 </div>
             </div>
         </div>
-        </div>
+    </div>
 
-        <script>
-            var submitBtn = document.getElementById("submit");
-            var node = document.getElementById("inputPassword");
-           
-            var func = function() {
-                var nickInput = document.getElementById("inputPassword").value;
-                
-                if(nickInput.length > 5) {
-                    alert("Please use a maximum of 5 chars when choosing nickname")
-                    return
-                }
-                var url1 = "controller.html?nick=" + nickInput;
-                var url = "http://pulse.controller.s3-website.eu-west-2.amazonaws.com/controller.html?nick=" + nickInput; 
-                window.location.href = url1;
+    <script>
+        var submitBtn = document.getElementById("submit");
+        var node = document.getElementById("inputPassword");
+
+        var func = function () {
+            var nickInput = document.getElementById("inputPassword").value;
+
+            if (nickInput.length > 5) {
+                alert("Please use a maximum of 5 chars when choosing nickname")
+                return
             }
+            var url1 = "controller.html?nick=" + nickInput;
+            var url = "http://pulse.controller.s3-website.eu-west-2.amazonaws.com/controller.html?nick=" + nickInput;
+            window.location.href = url1;
+        }
 
-             node.addEventListener("keyup", function(event) {
-                if (event.key === "Enter") {
-                    func()
-                }
-            });
+        node.addEventListener("keyup", function (event) {
+            if (event.key === "Enter") {
+                func()
+            }
+        });
 
-            submitBtn.onclick = func;
-        </script>
-    </body>
+        submitBtn.onclick = func;
+    </script>
+</body>
+
 </html>

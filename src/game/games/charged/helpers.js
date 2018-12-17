@@ -9,12 +9,12 @@ export function k_combinations(set, k) {
 	}
 
 	// K-sized set has only one K-sized subset.
-	if (k == set.length) {
+	if (k === set.length) {
 		return [set];
 	}
 
 	// There is N 1-sized subsets in a N-sized set.
-	if (k == 1) {
+	if (k === 1) {
 		combs = [];
 		for (i = 0; i < set.length; i++) {
 			combs.push([set[i]]);
@@ -52,11 +52,37 @@ export function sumForces(q) {
     return [avgX/q.mass, avgY/q.mass];
 }
 
- export function elasticCollision(m1,m2,u1,u2) {
+export function isLeft(vector) {
+	
+}
+
+export function euclideanDistance(x1, y1, x2, y2) {
+	const a = x1 - x2;
+	const b = y1 - y2;
+	return Math.sqrt( a*a + b*b )
+}
+
+export function sumVectors(arr) {
+	let x  =0;
+	let y= 0;
+	arr.forEach(vec => {
+		x+=vec[0];
+		y+=vec[1];
+	})
+
+	return [x, y]
+
+}
+
+export function isUp(vector) {
+	return vector[0] > 0;
+}
+
+export function elasticCollision(m1,m2,u1,u2) {
     let x = (u1[0]*(m1-m2) + 2*m1*u2[0]) / (m1+m2)
     let y = (u1[1]*(m1-m2) + 2*m1*u2[1]) / (m1+m2)
     return [x, y]
- }
+}
 
  export function scale(vector, mult) {
     return [vector[0]*mult, vector[1]*mult]
@@ -88,6 +114,16 @@ export function sumForces(q) {
     return false;
     */
  }
+
+ export function makeId(len) {
+	var text = "";
+	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  
+	for (var i = 0; i < len; i++)
+	  text += possible.charAt(Math.floor(Math.random() * possible.length));
+  
+	return text;
+  }
 
  export function normalise_vector(vector) {
     let l = get_vector_length(vector);

@@ -7,5 +7,8 @@ export default class GameObject {
         this.mass = mass;
         this.is_player = false;
         this.max_speed = 140;
+        this.lastUpdate = performance.now();
     }
+
+    
 }
