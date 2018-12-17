@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import * as THREE from 'three'
 import Manager from './game/manager'
 import './App.css';
-import Controller from './controller.js/controller';
+//import Controller from './controller.js/controller';
+//import Controller from './controller'
 import ScoreBoard from './ui/scoreboard';
 import * as PIXI from 'pixi.js';
 

@@ -1,8 +1,5 @@
 import * as THREE from 'three'
 import Player from './player'
-import PhysicsEngine from './physics'
-import Particles from './particles';
-import OrbitControls from './controls/orbitcontrols'
 import RenderPass from './postprocessing/passes/renderpass'
 import UnrealBloomPass from './postprocessing/passes/unrealbloompass'
 import EffectComposer from './postprocessing/effectcomposer'
@@ -12,8 +9,7 @@ export default class Manager {
 
     constructor(renderer, updatePlayers) {
         
-        this.physicsEngine = new PhysicsEngine(0.15, 4.5);
-        this.objects = [];
+                this.objects = [];
         this.players = {};
         this.updatePlayers = updatePlayers;
         this.renderer = renderer;
@@ -95,12 +91,14 @@ export default class Manager {
 
     addPlayer = (id, name) => {
         // ideally we'd want if player 0 or 1 we'll place them at two different X and Ys.
+        var x;
+        var y;
         if(id == 1){
-            let x = 200;
-            let y = 200;
+            x = 200;
+            y = 200;
         } else if(id == 2) {
-            let x = 700;
-            let y = 200;
+            x = 700;
+            y = 200;
         }
         this.players[id] = new Player(x,y, 0.01, (0,255,0), this, name, this.scene);
         this.objects.push(this.players[id]);
