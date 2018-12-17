@@ -6,6 +6,7 @@ import OrbitControls from './controls/orbitcontrols'
 import RenderPass from './postprocessing/passes/renderpass'
 import UnrealBloomPass from './postprocessing/passes/unrealbloompass'
 import EffectComposer from './postprocessing/effectcomposer'
+import * as PIXI from 'pixi.js'
 
 export default class Manager {
 
@@ -42,12 +43,12 @@ export default class Manager {
             }
         })
 
-
+        /*
         this.physicsEngine.applyElectroForce(this.objects);
         this.physicsEngine.tick(this.objects);
         this.particles.animate();
         this.composer.render()
-        //renderer.render(this.scene, this.camera);
+        renderer.render(this.scene, this.camera);*/
     }
 
     removePlayer = (id) => {
@@ -61,40 +62,48 @@ export default class Manager {
 
 
     setUpScene = () => {
-        this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera();
+        //this.scene = new THREE.Scene();
+        //this.scene = new PIXI.scene;
+        //this.camera = new THREE.PerspectiveCamera();
 
-        this.camera.position.z = 5;
+        //this.camera.position.z = 5;
 
-        this.controls =  new OrbitControls(this.camera, this.renderer.domElement)
+        //this.controls =  new OrbitControls(this.camera, this.renderer.domElement)
 
         //controls.update() must be called after any manual changes to the camera's transform
-        this.controls.update();
+        //this.controls.update();
 
-        this.starsGeometry = new THREE.Geometry();
-        this.particles = new Particles(this.camera);
-        this.scene.add(this.particles.mesh);
+        //this.starsGeometry = new THREE.Geometry();
+        //this.particles = new Particles(this.camera);
+        //this.scene.add(this.particles.mesh);
 
 
-        var gridHelper = new THREE.GridHelper(400, 10);
+        //var gridHelper = new THREE.GridHelper(400, 10);
         
-        gridHelper.position.z = - 520;
-        gridHelper.rotation.x = Math.PI/2;
-        this.scene.add( gridHelper );
+        //gridHelper.position.z = - 520;
+        //gridHelper.rotation.x = Math.PI/2;
+        //this.scene.add( gridHelper );
 
-        var renderScene = new RenderPass( this.scene, this.camera );
-        var bloomPass = new UnrealBloomPass(3.2, 0.87, 0,  new THREE.Vector2(800, 800) );
-        this.composer = new EffectComposer( this.renderer );
-        this.composer.setSize( 800, 800 );
-        this.composer.addPass( renderScene );
-        bloomPass.renderToScreen = true;
-        this.composer.addPass( bloomPass );
+        //var renderScene = new RenderPass( this.scene, this.camera );
+        //var bloomPass = new UnrealBloomPass(3.2, 0.87, 0,  new THREE.Vector2(800, 800) );
+        //this.composer = new EffectComposer( this.renderer );
+        //this.composer.setSize( 800, 800 );
+        //this.composer.addPass( renderScene );
+        //bloomPass.renderToScreen = true;
+        //this.composer.addPass( bloomPass );
     }
 
     addPlayer = (id, name) => {
-        let x = 200+Math.floor(Math.random() * 600);
-        let y = 200+Math.floor(Math.random() * 600);
+        // ideally we'd want if player 0 or 1 we'll place them at two different X and Ys.
+        if(id == 1){
+            let x = 200;
+            let y = 200;
+        } else if(id == 2) {
+            let x = 700;
+            let y = 200;
+        }
         this.players[id] = new Player(x,y, 0.01, (0,255,0), this, name, this.scene);
         this.objects.push(this.players[id]);
+
     }
 }

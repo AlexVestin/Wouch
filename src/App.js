@@ -22,7 +22,7 @@ class App extends Component {
 
 
 
-    //this.manager = new Manager(this.renderer, this.updatePlayers);
+    this.manager = new Manager(this.renderer, this.updatePlayers);
     //this.controller = new Controller(this.manager, this.updatePlayers, this.removePlayer);
   
     // Threejs renderer set-up
