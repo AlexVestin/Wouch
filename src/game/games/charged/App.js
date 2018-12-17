@@ -20,13 +20,25 @@ class App extends Component {
     this.port = url.searchParams.get("room");
   }
 
+  createTextCanvas = () => {
+    this.textCanvas = document.createElement("canvas");
+    this.textCanvas.width = this.width;
+    this.textCanvas.height = this.height;
+    this.textCanvas.setAttribute("style", "position:absolute;")
+    this.canvasMountRef.current.appendChild(this.textCanvas);
+    this.textCanvasCtx = this.textCanvas.getContext("2d");
+  }
+
   componentDidMount() {
     // Threejs renderer set-up
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.renderer.setClearColor('#000000');
     this.renderer.setSize(this.width, this.height);
+    this.createTextCanvas()
     this.canvasMountRef.current.appendChild(this.renderer.domElement);
-    this.manager = new Manager(this.renderer);
+   
+    
+    this.manager = new Manager(this.renderer, this.textCanvasCtx);
     this.controller = new Controller(this.port, this.manager, this.updateState);
   }
 
@@ -59,7 +71,7 @@ class App extends Component {
     let p1 = Object.assign({}, this.state.players);
     Object.keys(this.manager.players).forEach(key => {
       let player = this.manager.players[key];
-      p1[player.id] = {name:player.name,  score:player.score} 
+      p1[player.id] = {name:player.name,  score:player.score, color: player.color} 
     })
     this.setState({players: p1});
   }
@@ -88,7 +100,7 @@ class App extends Component {
     return (
       <div className="container">
         <div className="wrapper">
-          <div style={{ display: this.state.encoding ? "none" : "" }} ref={this.canvasMountRef}></div>
+          <div ref={this.canvasMountRef}></div>
           <ScoreBoard players={this.state.players}></ScoreBoard>
         </div>
       </div>

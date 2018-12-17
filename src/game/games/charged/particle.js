@@ -73,19 +73,4 @@ export default class Particle extends GameObject {
             v: this.v,
         }
     }
-
-    switchCharge(){
-        this.charge = this.charge*-1;
-        if(this.switchChargeCounter <= 0) {
-            if(this.charge < 0) {
-                this.mesh.material.color = new THREE.Color(0, 255, 0);
-            }else {
-                this.mesh.material.color = new THREE.Color(255, 0, 0);
-            }
-
-            this.switchChargeCounter = this.switchCD;
-        }
-       
-        
-    }
 } 

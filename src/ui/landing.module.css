@@ -12,33 +12,17 @@
     width: 100%;
     height: 100%;
     overflow: scroll;
-    background-image: url("./maxresdefault.jpg");
-
-    background-color: #aaa;
+    background-image: url("./maxresdefaultalpha.png");
+    background-position: bottom;
+    background-repeat: repeat-x;
+    
 
     overflow:hidden;
     border-bottom: 1px solid gray;
+    z-index: 0 !important;
 }
 
-.socbutton:hover {
-    filter: brightness(93%);
-}
 
-.button:hover {
-    background-color: #0069d9 !important;
-    border-color: #0062cc !important;
-}
-
-.button:active{
-    box-shadow: none !important;
-    background-color: #0062cc !important;
-    border-color: #005cbf !important;
-}
-.button {
-    text-decoration: none;
-    font-family: 'Work Sans', sans-serif;
-    margin-top: 10px;
-}
 
 .input {
     width: 100px;
@@ -91,7 +75,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 10px;
+    margin-top: 30px;
     margin-bottom: 30px;
 }
 
@@ -105,6 +89,7 @@
 }
 
 .pageWrapper {
+    z-index: 1000000 !important;
     display:flex;
     flex-direction: column;
     align-items: center;
@@ -112,24 +97,13 @@
 }
 .wrapper {
     
-    background-color: rgba(238, 238, 238, 0.2);
+    background-color: rgba(238, 238, 238, 0.05);
     border-radius: 0.2em;
-    
-    -webkit-box-shadow: 0px 10px 20px 0px rgba(50, 50, 50, 0.52);
-	-moz-box-shadow:    0px 10px 20px 0px rgba(50, 50, 50, 0.52);
-	box-shadow:         0px 10px 20px 0px rgba(50, 50, 50, 0.52);
-    box-sizing: border-box;
-    border: 1px solid #eee;
-    
-
-    
     width: 70%;
     
     margin-left: auto;
     margin-right: auto;
-    
-
-    max-width: 550px;
+    max-width: 350px;
 }
 
 

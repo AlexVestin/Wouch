@@ -1,21 +1,10 @@
 import React, {PureComponent} from "react";
 import  {Redirect} from 'react-router-dom';
-import Button from '@material-ui/core/Button'
+import Button from './components/button'
 import classes from './landing.module.css';
 
-const bootstrapButtonStyle = {
-    marginLeft: 15,
-    marginRight: 15,
-    marginTop: 10,
-    boxShadow: 'none',
-    color: "white",
-    fontSize: 16,
-    padding: '6px 12px',
-    border: '1px solid',
-    backgroundColor: '#007bff',
-    borderColor: '#007bff',
-    height: 25
-}
+import Background from './landingbackground'
+
 
 class App extends PureComponent {
     
@@ -33,26 +22,39 @@ class App extends PureComponent {
             return <Redirect to={this.state.to}></Redirect>
         }
 
-        const hostStyle = {...bootstrapButtonStyle,textTransform:"none", backgroundColor: '#3B5998', borderColor: '#3B5998'}
-        const contStyle = {...bootstrapButtonStyle,textTransform:"none", backgroundColor: '#F32E06', borderColor: '#F32E06'}
-
         return (
-        <div className={classes.container}>
-            <div className={classes.pageWrapper}>
-                <div className={classes.pageTitle}>
-                        wouch
-                    </div>
+            <React.Fragment>
+                <div className={classes.container}>
+                    
+                    <div className={classes.pageWrapper}>
+                        <div className={classes.pageTitle}>
+                                
+                            </div>
 
-                <div className={classes.wrapper}>
-                    <form className={classes.form} onSubmit={this.submit}>        
-                        <Button style={hostStyle} className={classes.socbutton} onClick={this.redirectGame}>Host room</Button>
-                        <Button style={contStyle} className={classes.socbutton} onClick={this.redirectCont}>Join room</Button>
-                    </form>
+                        <div className={classes.wrapper}>
+                            <form className={classes.form} onSubmit={this.submit}>        
+                                <Button color="#58afd1" onClick={this.redirectGame}>Host room</Button>
+                                <div style={{marginTop: 40}}>
+                                    <Button color="#875F9A" onClick={this.redirectCont}>Join room</Button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
                 </div>
-            </div>
-        </div>
+                
+                <Background></Background>
+                <div style={{backgroundColor: "blue", width: "100%", height: 1000, position: "absolute", zIndex: "1000000 !important"}}>.</div>
+            </React.Fragment>
+        
         )
     }
 }
  
 export default App;
+
+
+/*
+
+
+*/

@@ -12,9 +12,10 @@ export default class ScoreBoard extends PureComponent {
                     </div>
                     {Object.keys(players).map(key => {
                         const name = players[key].name
+                        const color = players[key].color
                         return (
                             <div key={key} className="item">
-                                <div className="name">
+                                <div className="name" style={{color: "rgb("+color[0]+","+color[1]+","+color[2]+")"}}>
                                     {name.substr(0,7) + (name.length > 7 ? "..." : "")}
                                 </div>
                                 

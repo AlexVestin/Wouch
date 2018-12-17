@@ -1,16 +1,26 @@
 import Particle from './particle'
 import * as THREE from 'three'
 import { normalise_vector, scale } from './helpers'
+
+
+const colors = [
+    [212, 175, 55],
+    [120,40,255],
+    [100,100,255],
+    [255,100,100],
+    [100,255,100]
+]
+
 export default class Player extends Particle {
     constructor(x,y,charge,color,manager, name="", scene=null, id = null) {
         super(x, y, 20, charge, 100, [0,0], false);
   
         this.id = id;
-
+        this.index = Object.keys(manager.players).length;
         this.name = name
         this.charge = charge
         this.manager = manager
-        this.color = color
+        this.color = colors[this.index % colors.length]
         this.score = 0
         this.max_speed = 140
 
@@ -36,7 +46,7 @@ export default class Player extends Particle {
 
         if(scene) {
             this.scene = scene;
-            var geometry = new THREE.CircleGeometry( 0.1, 5 + Math.floor(Math.random() * 10 ));
+            var geometry = new THREE.CircleGeometry( 0.1, 5 + Math.floor(Math.random() * 8 ));
             var material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe:true, transparent:true } );
             material.side = THREE.DoubleSide;
 
@@ -116,13 +126,12 @@ export default class Player extends Particle {
         }
         if(this.respawnCount <= 0 && this.respawning) {
             this.respawning = false;
+            this.charge = this.saveCharge;
             if(this.charge < 0) {
                 this.mesh.material.color = new THREE.Color(0, 255, 0);
             }else {
                 this.mesh.material.color = new THREE.Color(255, 0, 0);
             }
-
-            this.charge = this.saveCharge;
         }
         this.respawnCount -= 1;
     }

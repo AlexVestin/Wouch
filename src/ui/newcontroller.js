@@ -50,7 +50,6 @@ class Join extends PureComponent {
         if(this.state.redirect) {
             const { to, controller, port} = this.state;
             window.history.pushState(null, null, '/join');
- 
             return <Redirect to={to + "?room=" + port + "&nick=" + this.nickRef.current.getValue() +"&controller=" + controller}></Redirect>
         }
 

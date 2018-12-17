@@ -56,7 +56,7 @@ export default class PhysicsEngine {
     }
 
 
-    applyElectroForce(gameObjects, walls) {
+    applyElectroForce(gameObjects, walls, addScore) {
         
          for(var i = 0; i < gameObjects.length; i++) {
             let obj = gameObjects[i];
@@ -126,23 +126,24 @@ export default class PhysicsEngine {
 
                     if(!q1.respawning) {
                         if(q1 !== q2.player) {
-                            q2.player.score += 1;                        
+                            q2.player.score += 5;    
+                            addScore(q2.player, q2, 5);                    
                         }else {
                             q2.player.score -= 1;
+                            addScore(q1, q1, -1);
                         }
                         q1.is_dead = true;
                         return;
                     }
-                   
-                        
-                    
-                    
+
                 }else if(q2.is_player && !q1.is_player){
 
                     if(!q1.respawning) {
                         if(q2 !== q1.player) {
-                            q1.player.score += 1; 
+                            q1.player.score += 5; 
+                            addScore(q1.player, q2, 5);
                         }else {
+                            addScore(q2, q2, -1);
                             q1.player.score -= 1;
                         }
                             

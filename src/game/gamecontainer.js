@@ -11,10 +11,10 @@ export default class GameContainer extends PureComponent {
     }
       render() {
         return (
-          <React.Fragment>
+          <div style={{width: "100%", height: "calc(100% - 50px)"}}>
             {this.state.gamePath === "charged" && <Charged></Charged>}
             {this.state.gamePath === "pokemon" && <Pokemon></Pokemon>}
-          </React.Fragment>
+          </div>
         )
   }
 }

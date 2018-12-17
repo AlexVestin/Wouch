@@ -56,14 +56,11 @@ export default class DeathAnimation {
             mesh.position.x += this.vectors[i][0] / this.animationTicks
             mesh.position.y += this.vectors[i][1] / this.animationTicks
             mesh.material.opacity =  this.countDown / this.animationTicks;
+            mesh.scale.set(this.countDown / this.animationTicks, this.countDown / this.animationTicks, this.countDown / this.animationTicks)  
             
             mesh.rotation.x += this.xRotation;
             mesh.rotation.y += this.yRotation;
             mesh.rotation.z += this.zRotation;
-
-            /*mesh.rotation.z += 0.01;
-            mesh.rotation.x += 0.01;
-            mesh.rotation.y += 0.2;*/
 
         })
 

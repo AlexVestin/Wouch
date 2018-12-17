@@ -7,7 +7,6 @@ export default class Games extends PureComponent {
     return (
 
         <div className={classes.container}>
-
             <div className={classes.title}>
                 Games
             </div>

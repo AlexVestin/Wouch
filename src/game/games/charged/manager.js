@@ -14,9 +14,10 @@ import DeathAnimation from './deathanimation'
 
 export default class Manager {
 
-    constructor(renderer) {
+    constructor(renderer, textCtx) {
 
-        this.physicsEngine = new PhysicsEngine(0.15, 4.5);
+        this.textCtx = textCtx;
+        this.physicsEngine = new PhysicsEngine(0.13, 4.5);
         this.objects = [];
         this.players = {};
         this.renderer = renderer;
@@ -25,7 +26,9 @@ export default class Manager {
         this.positions = [];
         this.deathAnimations = [];
         this.postProcessing = true;
-        this.setUpScene()
+        this.textCtx.font = "13px Arial";
+        this.setUpScene();
+        this.points = [];
 
     }
 
@@ -47,8 +50,20 @@ export default class Manager {
             verts.push(mesh);
             this.scene.add(mesh);
         })
+
+        
         this.deathAnimations.push(new DeathAnimation(verts, this));
     }
+
+    convertToPixelPosition = (obj) => {
+        const width = 800;
+        const height = 800;
+        var pos = obj.position.clone();
+        pos.project(this.camera);
+        pos.x = ( pos.x * width/2 ) + width/2;
+        pos.y = - ( pos.y * height/2) + height/2;
+        return pos;
+    } 
 
 
     updatePlayersG = () => {
@@ -63,11 +78,54 @@ export default class Manager {
 
     }
 
+    updateText = () => {
+        
+        this.textCtx.clearRect(0, 0, 800, 800);
+        Object.keys(this.players).forEach(key => {
+            let player = this.players[key];
+            this.textCtx.save()
+            this.textCtx.rotate(player.rotation);
+
+            this.textCtx.fillStyle ="rgb("+player.color[0]+","+player.color[1]+","+player.color[2]+")";
+            const pos = this.convertToPixelPosition(player.mesh);
+            
+            this.textCtx.fillText(player.name.substr(0,5), pos.x+5, pos.y-10);
+            this.textCtx.restore()
+        })
+
+        this.points.forEach(point =>{
+            this.textCtx.save()
+            this.textCtx.fillStyle ="rgb("+point[2][0]+","+point[2][1]+","+point[2][2]+")";
+            const pos = point[0];
+            this.textCtx.strokeStyle="rgb("+point[2][0]+","+point[2][1]+","+point[2][2]+")";
+            this.textCtx.shadowColor="rgb("+point[2][0]+","+point[2][1]+","+point[2][2]+")";
+            this.textCtx.shadowOffsetX=0;
+            this.textCtx.shadowOffsetY=0;
+            this.textCtx.shadowBlur=25;
+
+            this.textCtx.globalAlpha = point[1] / 100;
+            this.textCtx.strokeText(point[3] > 0 ? "+"+point[3] : point[3], pos.x, pos.y);
+            point[1] -=1;
+            this.textCtx.restore()
+        })
+
+        this.points = this.points.filter(p => p[1] >= 0);
+    }
+
+    pointsTextAnimation = (scoringPlayer, deadPlayer, points) => {
+        if(scoringPlayer === deadPlayer) {
+            this.points.push([this.convertToPixelPosition(scoringPlayer.mesh), 100, scoringPlayer.color, points])
+        }else {
+            this.points.push([this.convertToPixelPosition(deadPlayer.mesh), 100, scoringPlayer.color, points])
+        }
+    }
+
 
     updateGame = () => {
         Object.keys(this.players).forEach(key => {
             if (this.players[key].is_dead) {
                 this.createDeathAnimation(this.players[key])
+                
                 this.players[key].respawn()
                 this.players[key].is_dead = false;
 
@@ -81,9 +139,10 @@ export default class Manager {
             }
         })
 
-        this.physicsEngine.applyElectroForce(this.objects, this.walls);
+        this.physicsEngine.applyElectroForce(this.objects, this.walls, this.pointsTextAnimation);
         this.physicsEngine.tick(this.objects, this.isHosting);
         this.deathAnimations.forEach(d => d.update())
+        this.updateText()
     }
 
     packageGameInfo = () => {
