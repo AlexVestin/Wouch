@@ -1,0 +1,13 @@
+
+
+.buttonGroup {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    
+}
+
+.slider {
+    width: 90%;
+}
+

@@ -7,6 +7,15 @@
     border: 3px solid #555;
     flex-direction: column;
     margin-left: 15px;
+    
+}
+
+.settings {
+    align-self: flex-end;
+    width: 100%;
+    margin-top: auto;
+    border-top: 1px solid black;
+    
 }
 
 .item {

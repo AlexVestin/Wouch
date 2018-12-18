@@ -3,12 +3,13 @@ import { euclideanDistance, normalise_vector, scale } from './helpers'
 export default class Enemy extends Player {
 
     constructor(x,y,charge,color,manager, name, id) {
-        super(x,y,charge,color, manager, name, manager.scene)
+        super(x,y,charge,color, manager, id, manager.scene)
         this.id = id;
         
 
         this.speed = this.speed*0.1;
         this.switchCD = 25;
+        this.is_comp = true;
         this.generateVectorCount = 0;
         this.vx = Math.random() *this.speed - this.speed/2;
         this.vy = Math.random() *this.speed - this.speed/2;

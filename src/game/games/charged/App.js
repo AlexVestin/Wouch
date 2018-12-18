@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import * as THREE from 'three'
 import Manager from './manager'
 import './App.css';
-import Controller from './networking/server';
+import Controller from './networking/receiver';
 import ScoreBoard from '../../scoreboard';
 
 
@@ -18,6 +18,13 @@ class App extends Component {
 
     var url = new URL(window.location.href);
     this.port = url.searchParams.get("room");
+
+
+    this.settings = {
+      nrComp: {value: 2, type: "increment buttons", min: 0, max: 30},
+      gameSpeed: {value: 0.15, type: "slider", min:0.05, max: 0.45, step:0.05},
+      friction: {value: 3, type: "slider", min: 0, max: 10}
+    }
   }
 
   createTextCanvas = () => {
@@ -42,6 +49,22 @@ class App extends Component {
     this.controller = new Controller(this.port, this.manager, this.updateState);
   }
 
+  updateSetting = (key, value) =>{
+    switch(key){
+      case "nrComp":
+        this.manager.updateNrComputers(value);
+        break;
+      case "gameSpeed":
+        this.manager.physicsEngine.dt = value;
+        break;
+      case "friction":
+        this.manager.physicsEngine.friction = value;
+        break;
+      default:
+        console.log("unknown setting type")
+    }
+  }
+
   updateState = (msg, args) => {
       switch(msg) {
         case "SOCKET_OPEN":
@@ -60,20 +83,25 @@ class App extends Component {
           this.manager.isHosting = true;
           break;
         case "JOINING":
-          this.manager.addPlayer(args[0], args[1]);
+          this.addPlayer(args[0], args[1]);
           break;
         default:
           console.log("UNKNOWN TYPE")
       }
   }
 
-  updatePlayers = (players) => {
-    let p1 = Object.assign({}, this.state.players);
+  updatePlayers = () => {
+    let p1 = {};
     Object.keys(this.manager.players).forEach(key => {
       let player = this.manager.players[key];
       p1[player.id] = {name:player.name,  score:player.score, color: player.color} 
     })
     this.setState({players: p1});
+  }
+
+  addPlayer = (id, name) => {
+    this.manager.addPlayer(id, name);
+    this.props.addPlayer(id, name);
   }
 
   removePlayer = (id) => {
@@ -82,6 +110,8 @@ class App extends Component {
     let p1 = Object.assign({}, this.state.players);
     delete p1[id];
     this.setState({players: p1});
+
+    this.props.removePlayer(id);
   }
 
   renderScene = () => {
@@ -101,7 +131,7 @@ class App extends Component {
       <div className="container">
         <div className="wrapper">
           <div ref={this.canvasMountRef}></div>
-          <ScoreBoard players={this.state.players}></ScoreBoard>
+          <ScoreBoard settings={this.settings} updateSetting={this.updateSetting} players={this.state.players}></ScoreBoard>
         </div>
       </div>
     );

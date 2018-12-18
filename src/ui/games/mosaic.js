@@ -38,7 +38,7 @@ export default class MosaicList extends PureComponent {
                 <div className={classes.row}>
                     <Image onClick={() => this.load("charged")} gameTitle={"Charged"} gameDesc={desc1} className={classes.photo} src={photo1} alt="la"></Image>
                     <Image onClick={() => this.load("pokemon")} gameTitle={"Pokemon"} gameDesc={desc1} className={classes.photo} src={photo2} alt="la"></Image>
-                    <Image gameTitle={"Game3"} gameDesc={desc1} className={classes.photo} src={photo3} alt="la"></Image>
+                    <Image onClick={() => this.load("knockoff")} gameTitle={"KnockOff"} gameDesc={desc1} className={classes.photo} src={photo2} alt="la"></Image>
                 </div>
 
                 <div className={classes.row}>

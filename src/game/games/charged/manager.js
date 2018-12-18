@@ -14,8 +14,7 @@ import DeathAnimation from './deathanimation'
 
 export default class Manager {
 
-    constructor(renderer, textCtx) {
-
+    constructor(renderer, textCtx, updatePlayers) {
         this.textCtx = textCtx;
         this.physicsEngine = new PhysicsEngine(0.13, 4.5);
         this.objects = [];
@@ -243,9 +242,13 @@ export default class Manager {
     }
 
     removePlayer = (id) => {
+        console.log(id, this.players)
+        
         this.objects = this.objects.filter(e => e !== this.players[id]);
         this.scene.remove(this.players[id].mesh);
         delete this.players[id];
+
+        console.log(id, this.players)
     }
 
     setUpScene = () => {
@@ -303,6 +306,25 @@ export default class Manager {
         this.addPlayer(makeId(4), "Comp1", true);
         this.addPlayer(makeId(4), "Comp2", true);
     }
+
+    updateNrComputers  = (nr) => {
+        let count = 0;
+        const keys = Object.keys(this.players); 
+        keys.forEach(e => count = this.players[e].is_comp ? count + 1 : count);
+
+        console.log(nr, count)
+        if(count > nr) {
+            for(var i = keys.length - 1; i >= 0; i--) {
+                if(this.players[ keys[i]].is_comp) {
+                    this.removePlayer(keys[i]);
+                    break;
+                }
+            }
+        }else {
+            this.addPlayer(makeId(4), "Comp2", true);
+        }
+    }
+
 
     addPlayer = (id, name, isEnemy = false) => {
         let x = 200 + Math.floor(Math.random() * 600);

@@ -18,6 +18,10 @@ export default class ControllerContainer extends PureComponent {
         }
     }
 
+    componentWillUnmount() {
+        this.exampleSocket.close();
+    }
+
     send = (msg) => {
         this.exampleSocket.send(msg);
     }
@@ -48,11 +52,12 @@ export default class ControllerContainer extends PureComponent {
     }
 
     render() {
-        console.log(this.state.controller, this.state.controller === "charged")
         return(
             <React.Fragment>
                 {this.state.controller  === "charged" && <ButtonController send={this.send} addMessage={this.addMessage}></ButtonController>}
+                {this.state.controller  === "knockoff" && <ButtonController send={this.send} addMessage={this.addMessage}></ButtonController>}
                 {this.state.controller  === "pokemon" && <JoystickController send={this.send} addMessage={this.addMessage}></JoystickController>}
+                
             </React.Fragment>
         )
     }

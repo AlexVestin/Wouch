@@ -1,32 +1,9 @@
+import Controller from "../../../networking/server";
 
 
-export default class Controller {
- 
-    constructor(port, manager, updateState) {
-        this.exampleSocket = new WebSocket("ws:3.8.115.45:" + port);
+export default class Receiver extends Controller {
 
-        this.exampleSocket.onopen = () => {
-            this.exampleSocket.send("SERVER");
-            this.updateState("SOCKET_OPEN");
-        }
-
-        this.manager = manager;
-        this.exampleSocket.onmessage = (e) => {
-            this.handleMessage(e.data);
-        }
-
-        this.updateState = updateState;
-        this.hosting = true;
-    }
-
-    send = (msg) => {
-        this.exampleSocket.send(msg);
-    }
-
-    handleMessage = (data) => {
-        let id = String(data.substr(0, 1));
-        let msg = String(data.substr(1));
-
+    handleMessage = (id, msg) => {
         if(id in this.manager.players) {
             if (msg[0] === "*") {
                 this.manager.players[id].direction = Number(msg.substr(1));
