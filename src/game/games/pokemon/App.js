@@ -14,8 +14,34 @@ class App extends Component {
     this.height = 720;
 
     this.state = {players: {} };
-    this.canvasMountRef = React.createRef();
-  }
+    this.canvasMountRef = React.createRef();  }
+
+
+  updateState = (msg, args) => {
+    switch(msg) {
+      case "SOCKET_OPEN":
+        this.renderScene();
+        break;
+      case "UPDATE_GAME":
+        this.manager.update(args);
+        break;
+      case "CLOSED":
+        this.removePlayer(args[0]);
+        break;
+      case "CLONING":
+        this.manager.isHosting = false;
+        break;
+      case "HOSTING":
+        this.manager.isHosting = true;
+        break;
+      case "JOINING":
+        this.manager.addPlayer(args[0], args[1]);
+        break;
+      default:
+        console.log("UNKNOWN TYPE")
+    }
+}
+
 
 
   componentDidMount() {
@@ -24,7 +50,7 @@ class App extends Component {
 
     this.manager = new Manager(this.renderer, this.updatePlayers);
     //this.controller = new Controller(this.manager, this.updatePlayers, this.removePlayer);
-  
+    this.controller = new Controller(this.port, this.manager, this.updateState);  
     // Threejs renderer set-up
     var app = new PIXI.Application(this.width, this.height, {backgroundColor : 0x1099bb});
     this.canvasMountRef.current.appendChild(app.view);

@@ -17,6 +17,7 @@ class App extends Component {
 
     this.state = {players: {} };
     this.canvasMountRef = React.createRef();
+    this.port = url.searchParams.get("room");
   }
 
 
@@ -25,7 +26,7 @@ class App extends Component {
 
 
     this.manager = new Manager(this.renderer, this.updatePlayers);
-    //this.controller = new Controller(this.manager, this.updatePlayers, this.removePlayer);
+    this.controller = new Controller(this.manager, this.updatePlayers, this.removePlayer);
   
     // Threejs renderer set-up
     var app = new PIXI.Application(this.width, this.height, {backgroundColor : 0x1099bb});
