@@ -9,6 +9,7 @@ import EffectComposer from './postprocessing/effectcomposer'
 import Particle from './particle';
 import Enemy from './enemy'
 import { makeId } from './helpers'
+import { intersects } from './helpers'
 import DeathAnimation from './deathanimation'
 
 
@@ -126,8 +127,11 @@ export default class Manager {
                 this.createDeathAnimation(this.players[key])
                 
                 this.players[key].respawn()
+                this.findClearSpawnPoint(this.players[key]);
                 this.players[key].is_dead = false;
+                //const index = this.objects.findIndex(e => e.id === this.players[key].i)
 
+                /*
                 for (var i = this.objects.length - 1; i >= 0; i--) {
                     let item = this.objects[i];
                     if (!item.is_player) {
@@ -135,8 +139,19 @@ export default class Manager {
                         this.objects.splice(i, 1);
                     }
                 }
+                */
             }
         })
+        for(var i = this.objects.length - 1; i >= 0; i--) {
+            let obj = this.objects[i]
+            if(!obj.is_player && obj.is_dead) {
+                this.scene.remove(obj.mesh);
+                this.objects.splice(i, 1)
+            }
+        }
+
+
+
 
         this.physicsEngine.applyElectroForce(this.objects, this.walls, this.pointsTextAnimation);
         this.physicsEngine.tick(this.objects, this.isHosting);
@@ -242,13 +257,11 @@ export default class Manager {
     }
 
     removePlayer = (id) => {
-        console.log(id, this.players)
         
         this.objects = this.objects.filter(e => e !== this.players[id]);
         this.scene.remove(this.players[id].mesh);
         delete this.players[id];
 
-        console.log(id, this.players)
     }
 
     setUpScene = () => {
@@ -325,15 +338,45 @@ export default class Manager {
         }
     }
 
+    findClearSpawnPoint = (obj) => {
+        let intsects = true;
+        while (intsects) {
+
+            obj.x = Math.random() * 2400 - 1200;
+            obj.y = Math.random() * 2400 - 1200;
+            obj.setMeshPos();
+
+            console.log(obj.x, obj.y);
+
+            intsects = false;
+            for(var i = 0; i < this.objects.length; i++) {
+                let obj2 =  this.objects[i];
+                if(obj !== obj2) {
+                    if(intersects(obj, obj2)) {
+                        intsects = true;
+                        break; 
+                    }
+                }
+            }
+
+        }
+    }
+
 
     addPlayer = (id, name, isEnemy = false) => {
         let x = 200 + Math.floor(Math.random() * 600);
         let y = 200 + Math.floor(Math.random() * 600);
+
+
         if (!isEnemy) {
             this.players[id] = new Player(x, y, 0.015, (0, 255, 0), this, name, this.scene, id);
         } else {
             this.players[id] = new Enemy(x, y, 0.015, (0, 255, 0), this, name, id);
         }
+
+        this.findClearSpawnPoint(this.players[id]);
+
+        
 
         this.objects.push(this.players[id]);
     }

@@ -10,8 +10,8 @@ html {
 }
 
 .button {
-    width: 48%;
-    height: 48%;
+    width: 50vh;
+    height: 50vh;
     font-size: 30px;
     border-radius: 50%;
     border: 3px solid black;

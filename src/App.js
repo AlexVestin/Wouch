@@ -1,11 +1,11 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import './App.css'
-import Landing from './ui/landing'
+import Landing from './ui/views/landing/landing'
 import GameContainer from './game/gamecontainer'
-import Join from './ui/newcontroller'
-import ControllerContainer from './ui/controllers/controllercontainer'
-import Games from './ui/games/games'
+import Join from './ui/views/join/newcontroller'
+import ControllerContainer from './ui/views/controllers/controllercontainer'
+import Games from './ui/views/games/games'
 import withHeader from './ui/hoc/withheader'
 
 const AppRouter = () => (

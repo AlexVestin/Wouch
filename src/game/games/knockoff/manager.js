@@ -104,15 +104,11 @@ export default class Manager {
         if(this.joystick_down) {
             inputVelocity.x = Math.cos(this.direction) * delta;
             inputVelocity.z = Math.sin(this.direction)  * delta;
-            console.log(inputVelocity)
         }
-
-        console.log(this.direction, this.joystick_down)
      
         // Add to the object
         this.sphereBody.velocity.x += inputVelocity.x;
         this.sphereBody.velocity.z -= inputVelocity.z;
-
 
         if(this.controls.enabled){
             this.world.step(this.dt);

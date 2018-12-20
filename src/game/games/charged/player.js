@@ -55,6 +55,11 @@ export default class Player extends Particle {
         }
     }
 
+    setMeshPos = () => {
+        this.mesh.position.x = this.x / 600;
+        this.mesh.position.y = this.y / 600;
+    }
+
 
     discretize = () => {
         return {

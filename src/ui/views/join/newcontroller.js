@@ -1,8 +1,9 @@
 import React, {PureComponent} from "react";
 import  {Redirect} from 'react-router-dom';
 import Button from '@material-ui/core/Button'
-import classes from './landing.module.css';
-import TextInput from './textinput'
+import classes from './newcontroller.module.css';
+import TextInput from '../../components/textinput'
+import Background from '../../background'
 
 
 const bootstrapButtonStyle = {
@@ -25,24 +26,33 @@ class Join extends PureComponent {
         super(props)
         this.roomRef = React.createRef();
         this.nickRef = React.createRef();
-        this.state = {to: "", redirect: false, port: 0, index: 0, controller: ""}
+        this.state = {to: "", redirect: false, port: 0, controller: ""}
     }
 
 
     requestController = () => {
+        return new Promise((resolve, reject) => {
             fetch("http://3.8.115.45/getcontroller",  {
                 method: "POST",
                 body: this.roomRef.current.getValue()
             }).then((response) => {
                 return response.text(); 
             }).then((text) => {
-                console.log(text)
-                this.setState({index: 1, controller: text, port: this.roomRef.current.getValue()});
-        });
-        
+                if(text !== "No such room") {
+                    resolve(text);
+                }else {
+                    alert("Couldn't find room with that id");
+                }
+                
+            });
+        })
     }
 
-    redirectCont = () => this.setState({redirect: true, to: "controller"});
+    redirectCont = () =>  {
+        this.requestController().then(controllerText => {
+            this.setState({redirect: true, to: "controller", controller: controllerText, port: this.roomRef.current.getValue()})
+        })
+    };
 
     render() {
         const contStyle = {...bootstrapButtonStyle,textTransform:"none", backgroundColor: '#F32E06', borderColor: '#F32E06'}
@@ -54,25 +64,17 @@ class Join extends PureComponent {
         }
 
         return (
-            <div className={classes.container}> 
+            <div className={classes.container}>
+                <div style={{height: "calc(100%-100px)", width: "100%", backgroundColor: "rgb(46, 81, 240)", position: "absolute", top:0, left:0,zIndex:1000000}}></div>
                 <div className={classes.pageWrapper}>
-                    <div className={classes.pageTitle}>
-                            wouch
-                        </div>
+
 
                     <div className={classes.wrapper}>
-                        {this.state.index === 0 ? 
-                            <div className={classes.form} >        
-                                <TextInput ref={this.roomRef} className={classes.input} type="number" label="room code"></TextInput>
-                                <Button style={contStyle} className={classes.socbutton} onClick={this.requestController}>Next</Button>
-                            </div>
-                        :
-                            <div className={classes.form}>        
-                                <TextInput ref={this.nickRef} className={classes.input} type="text" label="Nickname"></TextInput>
-                                <Button style={contStyle} className={classes.socbutton} onClick={this.redirectCont}>Join</Button>
-                            </div>
-                        }
-                    
+                        <div className={classes.form} >        
+                            <TextInput ref={this.roomRef} className={classes.input} type="number" label="room code"></TextInput>
+                            <TextInput ref={this.nickRef} className={classes.input} type="text" label="Nickname"></TextInput>
+                            <Button style={contStyle} className={classes.socbutton} onClick={this.redirectCont }>Join</Button>
+                        </div>
                     </div>
                 </div>
             </div>

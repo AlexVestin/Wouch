@@ -1,9 +1,11 @@
 import React, {PureComponent} from "react";
 import  {Redirect} from 'react-router-dom';
-import Button from './components/button'
+import Button from '../../components/button'
 import classes from './landing.module.css';
 
-import Background from './landingbackground'
+import Background from '../../background'
+import Grid from './grid'
+import Footer from './footer'
 
 
 class App extends PureComponent {
@@ -27,10 +29,7 @@ class App extends PureComponent {
                 <div className={classes.container}>
                     
                     <div className={classes.pageWrapper}>
-                        <div className={classes.pageTitle}>
-                                
-                            </div>
-
+                        <div className={classes.pageTitle}></div>
                         <div className={classes.wrapper}>
                             <form className={classes.form} onSubmit={this.submit}>        
                                 <Button color="#58afd1" onClick={this.redirectGame}>Host room</Button>
@@ -44,7 +43,9 @@ class App extends PureComponent {
                 </div>
                 
                 <Background></Background>
-                <div style={{backgroundColor: "blue", width: "100%", height: 1000, position: "absolute", zIndex: "1000000 !important"}}>.</div>
+                <div className={classes.divisionTitle}>Division Title</div>
+                <Grid></Grid>
+                <Footer></Footer>
             </React.Fragment>
         
         )

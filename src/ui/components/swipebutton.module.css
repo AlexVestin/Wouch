@@ -1,0 +1,50 @@
+@import 'https://fonts.googleapis.com/css?family=Oswald|Open+Sans';
+
+
+
+/* gives btn width and height */
+.a {
+  
+}
+
+
+.btn1 {
+    text-align: center;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    margin-top: 30px;
+    text-decoration: none; /* strip natual underlines */
+    width: 130px;
+    background: rgba(255, 255, 255, 0.15); /* BELIZE HOLE */
+    -webkit-transition: background 225ms ease!important;
+    -moz-transition: background 225ms ease!important;
+    transition: background 225ms ease!important;
+    font-family: Oswald, sans-serif;
+    font-size: 20px;
+    text-transform: uppercase;
+    transition: all 225ms ease;
+    border-radius: 2px;
+    overflow: hidden;
+    content: "";
+    display: block;
+    padding: 10px;
+    border-radius: 4px;
+    -webkit-transition: all 400ms cubic-bezier(.32,1.25,.1,1.47);
+    -moz-transition: all 400ms cubic-bezier(.32,1.25,.1,1.47);
+    transition: all 400ms cubic-bezier(.32,1.25,.1,1.47);
+    cursor: pointer;
+
+}
+
+.btn1:before, .btn1:focus, .btn1:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.03);
+    
+}
+
+.btn1:focus:before, .btn1:hover:before {
+    
+}

@@ -133,7 +133,10 @@ export default class PhysicsEngine {
                             addScore(q1, q1, -1);
                         }
                         q1.is_dead = true;
+                        q2.is_dead = true;
                         return;
+                    }else {
+                        q2.is_dead = true;
                     }
 
                 }else if(q2.is_player && !q1.is_player){
@@ -148,7 +151,10 @@ export default class PhysicsEngine {
                         }
                             
                         q2.is_dead = true;
+                        q1.is_dead = true;
                         return;
+                    }else {
+                        q1.is_dead = true;
                     }                    
                     
                 }

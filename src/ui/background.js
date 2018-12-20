@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import classes from './landingbackground.module.css'
+import classes from './background.module.css'
 
 // ATTRIBUTE https://codepen.io/okra/pen/nlsJL
 

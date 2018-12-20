@@ -7,6 +7,13 @@ import FormControl from '@material-ui/core/FormControl';
 export default class TextInput extends PureComponent {
     state = { value: "" }
 
+    constructor(props) {
+        super(props);
+
+
+        this.state = {value: ""};
+
+    }
 
     handleChange = (event) => {
         this.setState({value: event.target.value})
@@ -17,7 +24,6 @@ export default class TextInput extends PureComponent {
     render() {
         const {type, label, errorMsg } = this.props
         const error = (errorMsg !== "" && errorMsg !== undefined)
-
         return(
 
             <FormControl error={error} aria-describedby="name-error-text" className={this.props.className}>
